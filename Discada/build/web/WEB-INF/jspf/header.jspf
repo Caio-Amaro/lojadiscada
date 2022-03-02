@@ -1,0 +1,118 @@
+<%-- any content can be specified here e.g.: --%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ page pageEncoding="UTF-8" %>
+
+<html xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:f="http://xmlns.jcp.org/jsf/core">
+    
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>DISCADA</title>
+        <!-- Favicon-->
+        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="css/styles.css" rel="stylesheet" />
+        <!-- Bootstrap icons-->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+        <!-- CSS only -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    </head>    
+
+    <!-- Navigation-->
+
+    <header>
+
+
+        <div class="row" id="headerIncial">
+
+            <div class="col-12 col-md-4" style="margin-top: .7em;">
+                <p>Olá, <strong> Caio Costa </strong> Seja Bem Vindo!</p>                
+            </div>
+
+            <div class="col-12 col-md-4" style="margin-top: .7em;">
+                <p>
+                    <a class="fbcon" href="#"> <i id="icony" class="bi bi-facebook"></i></a>  
+                    <a class="fbcon" href="#"><i class="bi bi-instagram"></i></a>
+                    <a class="fbcon" href="#"><i class="bi bi-youtube"></i></a> 
+                    <a class="fbcon" href="#"><i class="bi bi-whatsapp"></i></a> 
+                    <a class="fbcon" href="#"><i class="bi bi-twitter"></i></a>
+                </p>
+            </div>
+
+
+            <div class="col-12 col-sm-4">
+                <div class="row">
+                    <div class="col-10 col-md-5" style="margin-top: .4em; margin-bottom: .4em;">
+
+                        <i style="font-size: 1.2em;" class="bi-cart-fill me-1"></i>
+                        <a class="btn btn-outline-light" href="/paginaCompraLista" role="button">Carrinho 
+                            <span class="badge bg-light text-dark ms-1 rounded-pill"> 1 </span></a>
+
+                    </div>
+
+                    <div class="col-10 col-sm-6" style="margin-top: .4em; margin-bottom: .4em;">
+                                                      
+                        <c:choose>
+                            <c:when test="${cliente.cliid != null}">                                
+                                <p style="margin-right: 1em; margin-left: 1em; padding-left: .5em; "><a class="btn btn-outline-light" href="/Discada/gerenciaCliente" role="button">Sua Conta</a>                           
+                                 <a style="" class="btn btn-outline-light" href="/Discada/deslogar">SAIR</a></p>
+                            </c:when>
+                            <c:when test="${cliente.cliid == null}">
+                               <a class="btn btn-outline-light" href="/Discada/cadastroP2" role="button">Login ou Cadastre</a>
+                            </c:when>
+                        </c:choose>
+                        
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <nav  class="navbar navbar-expand-lg navbar-light bg-white">
+            <div class="row">
+
+                <div class="col-12 col-md-4" style="margin-left: 5em;">                               
+                    <img src="img/logodiscadas.jpg" alt="logomarca discada" width="60%" height="auto" />
+                    <h5 id="sloganUm">Sua Loja de Discos Rar<i class="bi bi-disc"></i>s </h5>                    
+                </div>
+
+                <div class="col-12 col-md-4" style="margin-top: 1em; margin-left: -4em;">                 
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+                            <li class="nav-item"><a class="nav-link active" aria-current="page" href="/Discada">PRINCIPAL</a></li>
+                            <li class="nav-item"><a class="nav-link" href="#!">SOBRE</a></li>
+                            <li class="nav-item"><a class="nav-link" href="#!">PROMOÇÕES</a></li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="true">LOJA</a>
+
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">                                   
+                                    <li><a class="dropdown-item" href="#!">Rock</a></li>
+                                    <li><a class="dropdown-item" href="#!">Jazz</a></li>
+                                    <li><a class="dropdown-item" href="#!">Blues</a></li>
+                                    <li><a class="dropdown-item" href="#!">MPB</a></li>
+                                    <li><hr class="dropdown-divider" /></li>
+                                    <li><a class="dropdown-item" href="#!">Populares</a></li>
+                                    <li><a class="dropdown-item" href="#!">Super Raros</a></li>
+
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
+                <div class="col-12 col-md-4" style="width:40%; margin-left: 25em; margin-top:-2em;">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="pesquisar..." name="srch"">
+                        <button class="btn btn-outline-dark" type="submit"><i class="bi bi-search"></i></button>
+                    </div>
+                </div> 
+
+
+            </div>    
+        </nav>
+        <hr>
+
+    </header>

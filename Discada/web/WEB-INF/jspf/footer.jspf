@@ -1,0 +1,99 @@
+<%-- any content can be specified here e.g.: --%>
+<%@ page pageEncoding="UTF-8" %>
+
+<!-- Start Footer-->
+    
+    <footer style="margin-top: 10em; background-color: #3C3D59;" class="py-5">
+
+            <!-- Open Footer -->
+
+           <div class="container">
+                <div class="row">
+
+                    <!-- block one footer -->
+                    <div class="col-lg-4 col-md-12 col-sm-12">
+                        <div class="footer-top-box">
+             
+                            <h3 style="color:white;">Institucional</h3>
+
+                            
+                                <ul style="margin-left: -2em; list-style:none">
+                                
+                                    <li><a href="#" style="text-decoration: none;"><i class="bi bi-file-person"></i> - Sobre a Discada</a></li>
+                                    <li><a href="#"style="text-decoration: none;"><i class="bi bi-shield-shaded" ></i> - Políticas de Privacidade</a></li>
+                                    <li><a href="#"style="text-decoration: none;"><i class="bi bi-truck" ></i> - Políticas de Envio</a></li>
+                                    <li><a href="#"style="text-decoration: none;"><i class="bi bi-wallet2"></i> - Formas de Pagamento</a></li>
+                                    <li><a href="#"style="text-decoration: none;"><i class="bi bi-hand-thumbs-up"></i> - Trocas e Devoluções</a></li>
+                                    <li><a href="#"style="text-decoration:none;"><i class="bi bi-cash-stack"></i> - Promoções</a></li>
+
+                                </ul>    
+                            
+                        </div>
+                    </div>        
+
+                    <!-- block two footer -->
+
+                    <div class="col-lg-4 col-md-12 col-sm-12">
+                        <div class="footer-top-box" style="margin-left: -.5em;">
+                            <h3 style="color:white;">Newsletter</h3>
+                            <form class="newsletter-box">
+                                <div class="form-group">
+                                    <input class="form-control" type="email" name="Email" placeholder="Endereço de Email*" />
+                                       
+                                </div>
+                                <button style="margin-top:1em;" class="btn btn-outline-primary" type="submit">Enviar</button> 
+                            </form>
+                        </div>
+                    </div>
+                            
+                    <!-- block three footer -->
+
+                    <div class="col-lg-4 col-md-12 col-sm-12">
+                        <div class="footer-top-box" style="margin-left: 2.5em;">
+                            <h3 style="color:white;">Redes Sociais</h3>
+                            
+                            <p style="color:white;">Encontre a DISCAD@ nas redes sociais. Fique por dentro das novidades e promoções</p>
+                            
+                            <div class="d-block" >
+                                <ul class="nav d-flex " style="font-size: 1.5em; color:white;">
+                                    <li class="nav-item"><a href="#"><i style="padding: .3em;" class="bi bi-facebook"></i></a></li>
+                                    <li class="nav-item"><a href="#"><i style="padding: .3em;" class="bi bi-twitter"></i></a></li>
+                                    <li class="nav-item"><a href="#"><i style="padding: .3em;" class="bi bi-linkedin"></i></a></li>
+                                    <li class="nav-item"><a href="#"><i style="padding: .3em;" class="bi bi-youtube"></i></a></li>
+                                    <li class="nav-item"><a href="#"><i style="padding: .3em;" class="bi bi-camera"></i></a></li>
+                                    <li class="nav-item"><a href="#"><i style="padding: .3em;" class="bi bi-whatsapp"></i></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                        
+
+                </div>
+            </div>    
+
+
+    <!-- end of footer -->
+            
+            
+            
+    </footer>
+
+        <!-- Start copyright  -->
+
+        <div class="p-3 mb-2" style="margin-top: -1em; background-color: #D9115A; margin-left: -4em;">
+            <p class="m-0 text-center text-white">Todos os direitos Reservados &copy; Loja Discada - 2022</p>
+            <p class="m-0 text-center text-white">Projeto associado ao trabalho da matéria de LES do curso de ADS</p>
+            <p class="m-0 text-center text-white">Aluno Caio Costa N. A. da Silva</p>
+            
+        </div>
+        
+        <div class="p-3 mb-2" style="margin-top: -1em; margin-left: -4em;">
+            <p class="m-0 text-center text-dark">FATEC - Mogi das Cruzes - São Paulo - Brasil</p>
+        </div>
+
+         <!-- Bootstrap core JS-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Core theme JS-->
+        <script src="js/scripts.js"></script>
+</html>
+
