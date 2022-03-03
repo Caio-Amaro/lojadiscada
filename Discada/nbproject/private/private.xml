@@ -4,8 +4,8 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/Caio/Loja%20Discada/Discada/src/java/br/com/discada/controller/ControleServlet.java</file>
-            <file>file:/C:/Caio/Loja%20Discada/Discada/nbproject/build-impl.xml</file>
             <file>file:/C:/Caio/Loja%20Discada/Discada/src/java/br/com/discada/model/DAO/DaoGenerico.java</file>
+            <file>file:/C:/Caio/Loja%20Discada/Discada/src/java/br/com/discada/model/jpa/Clientes.java</file>
             <file>file:/C:/Caio/Loja%20Discada/Discada/src/java/br/com/discada/model/DAO/ClienteDao.java</file>
         </group>
     </open-files>

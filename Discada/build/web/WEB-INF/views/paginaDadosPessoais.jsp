@@ -60,7 +60,14 @@
                         <button style="margin-top: .5em; width:20%; margin-left: .8em;" type="submit" class="btn btn-outline-secondary">Confirme Alteração</button> 
                     </div>
                 </form>
-                <h5>${msgEditaCli}</h5>
+                <c:choose>
+                    <c:when test="${msgEditaCli != null}">
+                        <div style="margin-top: 1em;" class="alert alert-info" role="alert">
+                            <p>Olá ${cliente.clinome}, ${msgEditaCli}</p>
+                        </div>
+                    </c:when>
+                </c:choose>
+
                 <p>teste: ${cliente.idsegredo.secid} </p>
                 <p>teste1: ${trocaseg.seclogin} </p>
                 <p>teste2: ${trocaseg.secsenha} </p>
@@ -89,7 +96,14 @@
                         </div>
 
                         <button style="margin-top: .5em; margin-left: .8em; width:20%;" type="submit" class="btn btn-outline-secondary">Confirme Alteração</button> 
-                        <h5>${msgseg}</h5>
+                        <c:choose>
+                            <c:when test="${msgseg != null}">
+                                <div style="margin-top: 1em;" class="alert alert-info" role="alert">
+                                    <p>Olá ${cliente.clinome}, ${msgseg}</p>
+                                </div>
+                            </c:when>
+                        </c:choose>
+                        
                     </div>
                 </form>                        
             </div>

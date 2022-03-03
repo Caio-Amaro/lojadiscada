@@ -71,7 +71,10 @@
                             <i style="font-size: 2.5em; margin-left: 45%;" class="bi bi-credit-card-2-front"></i>  
                             <h5 class="card-title" style="text-align: center; margin-top: .5em;">CADASTRO DE CARTÕES</h5>
                             <p class="card-text" style="text-align: center;">Aqui você inclui e ou exclui seus cartões de crédito</p>
-                            <a href="/Discada/paginaCartoes" class="btn btn-outline-info">Visitar</a> 
+                            <form action="${pageContext.request.contextPath}/paginaCartoes" method="GET">                        
+                                <input type="hidden" value="${cliente.cliid}" name="idc">
+                                <button type="submit" class="btn btn-outline-info">Visitar</button>
+                            </form> 
                         </div>
                     </div>
                   </div>

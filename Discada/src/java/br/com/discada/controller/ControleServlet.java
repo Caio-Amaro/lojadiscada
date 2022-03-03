@@ -10,6 +10,7 @@ import br.com.discada.model.DAO.ItemPedidoDao;
 import br.com.discada.model.DAO.PedidoDao;
 import br.com.discada.model.DAO.ProdutoDao;
 import br.com.discada.model.DAO.SegredoDao;
+import br.com.discada.model.jpa.Cartaocredi;
 import br.com.discada.model.jpa.Clientes;
 import br.com.discada.model.jpa.Endereco;
 import br.com.discada.model.jpa.Segredo;
@@ -48,7 +49,7 @@ public class ControleServlet extends HttpServlet {
     private ProdutoDao prodDao;
     
     @EJB
-    private ClienteDao cliDao;
+    private ClienteDao clieDao;
     
     @EJB
     private SegredoDao segDao;
@@ -118,10 +119,40 @@ public class ControleServlet extends HttpServlet {
             }
 
 // ------------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------------
+// end point para gerar a listagem dos cartões cadastros ´pelo cliente
             
-             else if (userPath.equals("/gerenciaCliente")){
+            else if (userPath.equals("/paginaCartoes")){
+                
+                //session.getAttribute("cred");
+
+                String cre = request.getParameter("idc");
+
+                Cartaocredi cr = new Cartaocredi();
+                List<Cartaocredi> cred;
+                cred = (List<Cartaocredi>) creDao.ListarCartao(Integer.parseInt(cre));
+
+                session.setAttribute("credito", cred);
+                session.getAttribute("credito");
+             
+            }
+                
+                
             
-            
+
+// ------------------------------------------------------------------------------------            
+             else if (userPath.equals("/editarEndereco")){
+             
+                String idEndStr = request.getParameter("idclieSt");
+                
+                if (idEndStr != null && !idEndStr.equals(" ")) {    
+                    try {
+                        Endereco selecioneEn = (Endereco) endDao.getObjectById(Integer.parseInt(idEndStr));
+                        request.setAttribute("selecioneCliEnd", selecioneEn);
+                    } catch (Exception ex) {
+                            Logger.getLogger(ControleServlet.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
 
 // ------------------------------------------------------------------------------------
@@ -177,7 +208,7 @@ public class ControleServlet extends HttpServlet {
             throws ServletException, IOException {
           
         String userPath = request.getServletPath();
-          HttpSession session = request.getSession();
+        HttpSession session = request.getSession();
           
           
           if(userPath.equals("/Discada")) {}
@@ -233,7 +264,52 @@ public class ControleServlet extends HttpServlet {
 // ----------------------------------------------------------------------------------------------
 // end point para o inicio do cadastro do cliente 
           
-          else if (userPath.equals("/cadastroP2")) {
+          else if (userPath.equals("/paginaEndereco")) {
+            
+                String nomeDes = request.getParameter("nome");
+                String cep = request.getParameter("cep");
+                String logra = request.getParameter("logra");
+                String complem = request.getParameter("comp");
+                String casa = request.getParameter("num");
+                String cidade = request.getParameter("cidade");
+                String bairro = request.getParameter("bairro");
+                String estado = request.getParameter("estado");                
+                String idCliente = request.getParameter("idcli"); //idclientes
+            
+            if (idCliente != null && !idCliente.equals(" ")) {
+            
+                Endereco endereco = new Endereco();
+                //session.setAttribute("selecioneCliEnd", endereco);
+                //session.getAttribute("selecioneCliEnd");
+            
+                Clientes cliente = new Clientes();
+                cliente.setCliid (Integer.parseInt(idCliente));
+                
+                
+              
+                endereco.setEndnomedestino(nomeDes);
+                endereco.setEndcep(cep); 
+                endereco.setEndlogradouro(logra);
+                endereco.setEndcomplemento(complem);
+                endereco.setEndnumero(casa);//(num);
+                endereco.setEndcidade(cidade);
+                endereco.setEndbairro(bairro);
+                endereco.setEndestado(estado);
+                endereco.setEndidcliente(cliente);
+          
+            try { 
+                endDao.persist(endereco);
+                List<Endereco> ende;
+                ende = (List<Endereco>) endDao.listarEndereco(Integer.parseInt(idCliente));
+                session.setAttribute("endereco", ende);
+                session.getAttribute("endereco");
+                
+            } catch (Exception ex) {
+                Logger.getLogger(ControleServlet.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            }
+              
               
           }
           
@@ -259,7 +335,7 @@ public class ControleServlet extends HttpServlet {
                     segDao.setAcesso(true);
 
                     List<Clientes> c; 
-                    c = (List<Clientes>) cliDao.pegarClienteSegredo(idse);
+                    c = (List<Clientes>) clieDao.pegarClienteSegredo(idse);
 
                         if(c != null && !c.isEmpty() && !c.equals("")) {
 
@@ -267,7 +343,7 @@ public class ControleServlet extends HttpServlet {
 
                                 idclit = vem.getCliid();
                                 try {
-                                    Clientes cli = (Clientes) cliDao.getObjectById(idclit); 
+                                    Clientes cli = (Clientes) clieDao.getObjectById(idclit); 
                                     session.setAttribute("cliente", cli);
                                     session.getAttribute("cliente");
                                 }   catch (Exception ex) {
@@ -293,8 +369,107 @@ public class ControleServlet extends HttpServlet {
                 request.setAttribute("errologin", "o login e ou a senha não conferem. "
                 + "Certifique-se dos dados e tente novamente");
                 userPath = "/cadastroP2";
-            } 
-              
+            }               
+        }
+
+// ------------------------------------------------------------------------------------
+// end point para cadastrar um cartão de crédito pelo cliente
+            
+            else if (userPath.equals("/cadastroCartao")){
+                
+                String num = request.getParameter("num");
+                String idCli = request.getParameter("idcli");
+
+                if (num != null && !num.equals(" ")) {
+                    String nome = request.getParameter("nome");
+                    String cvv = request.getParameter("cvv");
+                    String datavali = request.getParameter("data");
+                    String bandeira = request.getParameter("bandeira");
+
+                    Cartaocredi credi = new Cartaocredi();
+                    Clientes cliente = new Clientes();
+
+                    credi.setCrenumero(num);
+                    credi.setCrenome(nome);
+                    credi.setCrecvv(Integer.parseInt(cvv));
+                    credi.setCrevalidade(datavali);
+                    credi.setCreidcliente(cliente);
+                    cliente.setCliid(Integer.parseInt(idCli)); 
+                    credi.setBandeira(bandeira);
+                    try { 
+                        creDao.persist(credi);
+                        List<Cartaocredi> cred;
+                        cred = (List<Cartaocredi>) creDao.ListarCartao(Integer.parseInt(idCli));
+                        userPath = "/paginaCartoes";
+                        request.setAttribute("credito", cred);
+                        request.getAttribute("credito");
+
+                    } catch (Exception ex) {
+                        Logger.getLogger(ControleServlet.class.getName()).log(Level.SEVERE, null, ex);                
+                      }
+                }            
+            }
+                
+// ----------------------------------------------------------------------------------------------
+// end point para o inicio do cadastro do cliente 
+          
+        else if (userPath.equals("/editarEndereco")) { 
+            
+            //Clientes cli = new Clientes();  
+            //session.getAttribute("cliente");
+            
+            String idCliente = request.getParameter("idclientes");
+            
+            if (idCliente != null && !idCliente.equals(" ")) {
+                
+                // Recebendo dados do formulário
+                String nomeDes = request.getParameter("nome");
+                String cep = request.getParameter("cep");
+                String logra = request.getParameter("logra");
+                String complem = request.getParameter("comp");
+                String numCasa = request.getParameter("num");
+                String cidade = request.getParameter("cidade");
+                String bairro = request.getParameter("bairro");
+                String estado = request.getParameter("estado");                
+                String idcliente = request.getParameter("idclientes");
+                String idend = request.getParameter("idend");
+                
+                // Criando objetos das classes associadas ao Crud
+                Endereco endereco = new Endereco();
+                Clientes cli = new Clientes();
+                
+                // Transformando o tipo string para int
+                int idcli = Integer.parseInt(idcliente); 
+                int iden = Integer.parseInt(idend);
+                
+                // "setando" o id do cliente para poder passar no objeto endereço
+                cli.setCliid (idcli);
+                
+                // "setando objeto endereço
+                endereco.setEndid(iden);
+                endereco.setEndnomedestino(nomeDes);
+                endereco.setEndcep(cep); 
+                endereco.setEndlogradouro(logra);
+                endereco.setEndcomplemento(complem);
+                endereco.setEndnumero(numCasa);
+                endereco.setEndcidade(cidade);
+                endereco.setEndbairro(bairro);
+                endereco.setEndestado(estado);
+                endereco.setEndidcliente(cli); // aqui passamos objeto cliente que já está setado com o id do formulário
+                
+                try {
+                    endDao.merge(endereco); // realizando operação no banco (solicitação)
+                    request.setAttribute("msgEditarEnd", "Endereço editado com sucesso!");
+                    Endereco selecioneEn = (Endereco) endDao.getObjectById(iden); // buscando o registro
+                    request.setAttribute("selecioneCliEnd", selecioneEn); // criando um objeto na sessão
+                    userPath = "/editarEndereco"; // "setando a path de redirecionamento após a resposta da requisição
+                    
+                } catch (Exception ex) {
+                    Logger.getLogger(ControleServlet.class.getName()).log(Level.SEVERE, null, ex);
+                    request.setAttribute("msgEditarEnd", "Problema ao editar endereço");
+                    
+                }
+            }
         }
           
 // ----------------------------------------------------------------------------------------------
@@ -309,7 +484,7 @@ public class ControleServlet extends HttpServlet {
             
                 Clientes client = new Clientes();
                 try {
-                    Clientes cli = (Clientes) cliDao.getObjectById(Integer.parseInt(idcl));
+                    Clientes cli = (Clientes) clieDao.getObjectById(Integer.parseInt(idcl));
                     session.setAttribute("cliente", cli);
                     userPath = "/paginaDadosPessoais";
                     
@@ -345,9 +520,9 @@ public class ControleServlet extends HttpServlet {
                     client.setClitelefone(telefone);
                     client.setCliativo(1);
             
-                    try {cliDao.merge(client);
+                    try {clieDao.merge(client);
                             try {
-                                Clientes cli = (Clientes) cliDao.getObjectById(Integer.parseInt(idcl));
+                                Clientes cli = (Clientes) clieDao.getObjectById(Integer.parseInt(idcl));
                                 session.setAttribute("cliente", cli);
                                 request.setAttribute("msgEditaCli", "Dados pessoais alterados com sucesso! ");
                                 userPath = "/paginaDadosPessoais";
@@ -362,7 +537,122 @@ public class ControleServlet extends HttpServlet {
                 }
             }
         }
+// ------------------------------------------------------------------------------------
+// end point para realizar a exclusão de um endereço no banco de dados 
+          
+        else if (userPath.equals("/excluirEndereco")) {
+        
+            String endidStr = request.getParameter("idclieSt"); // ID do endereço cadastrado
+            String idcliente = request.getParameter("idcliente"); // ID do cliente
+             
+             
+            if (endidStr != null && !endidStr.equals("")) {
+                try {
+                    Endereco selecioneEnd = (Endereco) endDao.getObjectById(Integer.parseInt(endidStr));
+                    endDao.remover(selecioneEnd);
+                    List<Endereco> en;
+                    en = (List<Endereco>) endDao.listarEndereco(Integer.parseInt(idcliente));
+                    session.setAttribute("endereco", en);
+                    session.getAttribute("endereco");
+                    userPath = "/paginaEndereco";
+                    
+                } catch (Exception ex) {
+                    Logger.getLogger(ControleServlet.class.getName()).log(Level.SEVERE, null, ex);
+                    userPath = "/paginaEndereco";
+                    request.setAttribute("msgEnd", " não pode ser "
+                            + "excluído porque está associado a uma compra em sua conta! Obrigado pela compreensão.");
+                    }
+            }
+        }
+// ------------------------------------------------------------------------------------
+// end point para gerar a listagem dos endereços do cliente
             
+            else if (userPath.equals("/excluirCartao")){
+            
+                String idcredito = request.getParameter("idcredito");
+                String idCli = request.getParameter("idcli");
+             
+                if(idcredito != null && !idcredito.equals("")){
+                
+                    try {
+                        Cartaocredi credito = (Cartaocredi) creDao.getObjectById(Integer.parseInt(idcredito));
+                        creDao.remover(credito);
+                        List<Cartaocredi> cred;
+                        cred = (List<Cartaocredi>) creDao.ListarCartao(Integer.parseInt(idCli));
+                        userPath = "/paginaCartoes";
+                        request.setAttribute("credito", cred);
+                        request.getAttribute("credito");
+                    } catch (Exception ex) {
+                        Logger.getLogger(ControleServlet.class.getName()).log(Level.SEVERE, null, ex);
+                      }
+                }                
+            }
+//---------------------------------------------------------------------------------------------------------
+        
+         else if(userPath.equals("/cadastroP2")){
+            
+            boolean pegouNumero = false;
+            boolean pegouMaiscula = false;
+            boolean pegouMinuscula = false;
+            boolean pegouSimbolo = false;
+            
+            String login = request.getParameter("login");
+            String password = request.getParameter("password");
+            String passwordone = request.getParameter("passwordteste");
+            
+            if (password.equals(passwordone)) {
+                // se senhas iguais condicionar a senhas fortes                    
+                if (password.length() > 6){
+                    request.setAttribute("msgSenha", "Tamanho da senha está OK!");
+                    
+                    for(char s : password.toCharArray()){
+                    // crio array de char para analisar os critérios de forma individual a senha
+                    if (s >= '0' && s <= '9'){
+                        pegouNumero = true; // critério de números
+                    } else if (s >= 'A' && s <= 'Z'){
+                        pegouMaiscula = true; // citério de maiúscula
+                    } else if (s >= 'a' && s <= 'z') {
+                        pegouMinuscula = true; // critério de minúscula
+                     } else {
+                        pegouSimbolo = true;
+                    }
+                 }
+                
+                 if(pegouNumero == true && pegouMaiscula == true && pegouMinuscula == true 
+                         && pegouSimbolo == true){
+                 
+                     Segredo seg = new Segredo();
+
+                     seg.setSeclogin(login);
+                     seg.setSecsenha(password);
+
+                     try {
+                         segDao.persist(seg);
+                         session.setAttribute("se", seg);
+                         seg = (Segredo) session.getAttribute("se");
+                         userPath = "/cadastroP1";
+                         request.setAttribute("mesgOk", "Senha cadastrada com sucesso! Agora finalize o cadastro.");
+
+                     } catch (Exception ex) {
+                         Logger.getLogger(ControleServlet.class.getName()).log(Level.SEVERE, null, ex);
+                         request.setAttribute("msgErrofinal", "Erro ao cadastrar sua senha");
+                     }
+            
+                     
+                 }   else { request.setAttribute("msgerromaior", "Sua senha precisa ter "
+                       + "maíscula (A,B,C...), minúscula(a,b,c...), caracter especial(%,@...), número "
+                         + "e no mínimo 6 caratecteres");}
+                    
+               } else { request.setAttribute("msgerrotam", "sua senha precisa ter "
+                       + "6 caratecteres");}
+                
+            } else {request.setAttribute("msgSenhaIgual", "as senhas devem ser iguais!");} // primeira condição: senhas iguais
+            
+            
+           
+        }
+
+// -----------------------------------------------------------------------------------------------            
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
            String url = "/WEB-INF/views" + userPath + ".jsp";
            try {

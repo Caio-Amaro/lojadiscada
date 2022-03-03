@@ -13,7 +13,7 @@
     <section class="py-5 bg-light">
         <div style="text-align: center; margin-top: -1em;">
             <h5 id="sloganUm"> GERENCIADOR DE ENDEREÇOS </h5>
-            <p> Olá ${cliente.clinome}, aqui você insere seus endereços de envio </p>               
+            <p> Olá ${cliente.clinome}, aqui você insere seu(s) endereço(s) de envio(s) </p>               
         </div>
             
 
@@ -60,100 +60,87 @@
 
             <!-- ++++ -->
 
-            <div class="row justify-content-md-center">
-                <div class="form-group col col-md-5">
-                    <label>Cidade</label>
-                    <input type="text" class="form-control" id="cidadeE" name="cidade">
-                </div>
-                
-                <div class="form-group col col-md-3">
-                    <label>CEP</label>
-                    <input type="text" class="form-control" id="cepE" name="cep">
-                </div>
-            
-               <div class="form-group col col-md-4">
-                <label>Estado</label>
-                <input type="text" name="estado" id="estadoE" class="form-control">
-                                   
-                </div>
-                
-                
-            </div>
-            
-            <div class="form-group">
-                
-                <div class="form-check" style="margin-top: 1em;">
-                    <input  type="hidden" VALUE="2" name="idli">
-                </div>
-            </div>
+                <div class="row justify-content-md-center">
+                    <div class="form-group col col-md-5">
+                        <label>Cidade</label>
+                        <input type="text" class="form-control" id="cidadeE" name="cidade">
+                    </div>
 
-            <p style="margin-top: 2em; color:red; margin-bottom: -.5em;"> ***ATENÇÃO*** </P><P>Todos os campos são obrigatatórios exceto 'COMPLEMENTO' </p>
-            <input type="hidden" name="idcli" value="${cliente.cliid}">
-            <button style="margin-top: 1.5em;" type="submit" class="btn btn-primary">Adicionar Novo</button>
-            
-        </form>
-    
-    </div>
-            
-    <hr>
+                    <div class="form-group col col-md-3">
+                        <label>CEP</label>
+                        <input type="text" class="form-control" id="cepE" name="cep">
+                    </div>
 
-            <div style="text-align: left; margin-top: 3em; margin-left: 7.5em; margin-bottom: 1.5em;">
-                <h5> ENDEREÇOS CADASTRADOS </h5>
-                
-            </div>
+                    <div class="form-group col col-md-4">
+                        <label>Estado</label>
+                        <input type="text" name="estado" id="estadoE" class="form-control">
+                    </div>
+                </div>
+
+                <div class="form-group">                
+                    <div class="form-check" style="margin-top: 1em;">
+                        <input  type="hidden" VALUE="2" name="idli">
+                    </div>
+                </div>
+
+                <input type="hidden" name="idcli" value="${cliente.cliid}">
+                <button type="submit" class="btn btn-outline-dark">Adicionar Novo</button>
+
+            </form>
+        </div>
+<hr>
+
+        <div style="text-align: left; margin-top: 3em; margin-left: 7.5em; margin-bottom: 1.5em;">
+            <h5 id="sloganUm"> ENDEREÇOS CADASTRADOS </h5>
+        </div>
 
     <!-- insert cards / block one -->
 
-    <div  class="container"> 
-        <div class="row justify-content-md-left">
-            
-                
-            
-          
-            <c:forEach var="ende" items="${end}">
-            <div class="col col-md-3">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">${ende.endnomedestino}</h5>                            
-                        <p class="card-text">${ende.endlogradouro}</p>
-                        <p class="card-text">CEP ${ende.endcep}</p>
-                        <p class="card-text">${ende.endcidade}</p>
-                        <div class="row">
-                            <div class="col-6">
-                                 
-                            <form name="sen" action="${pageContext.request.contextPath}/editarEndereco" method="GET">
-                                <input name="idclieSt" type="hidden" value="${ende.endid}">
-                                <input name="idcliente" type="hidden" value="${cliente.cliid}">
-                                <button class="btn btn-primary" type="submit">Alterar</button>
-                            </form>
-                            </div>
-                            
-                                <div class="col-6">
-                            <form action="${pageContext.request.contextPath}/excluirEndereco" method="POST">
-                                <input name="idclieSt" type="hidden" value="${ende.endid}">
-                                <input name="idcliente" type="hidden" value="${cliente.cliid}">                                
-                                        <button class="btn btn-danger" type="submit">Excluir</button>                                
-                            </form>
-                                        
+        <div  class="container"> 
+            <div class="row justify-content-md-center">
+                <c:forEach var="ende" items="${endereco}">
+                    <div class="col col-md-3">
+                        <div class="card">
+                            <div id="blockProductDois" class="card-body" style="text-align: center;">
+                                <h6 id="sloganUm">Destinatário</h6>
+                                <h5 class="card-title">${ende.endnomedestino}</h5>
+                                <hr>
+                                <h6 id="sloganUm">Dados do Endereço</h6>
+                                <p class="card-text">${ende.endlogradouro}</p>
+                                <p class="card-text">CEP ${ende.endcep}</p>
+                                <p class="card-text">${ende.endcidade} || ${ende.endestado}</p>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <form name="sen" action="${pageContext.request.contextPath}/editarEndereco" method="GET">
+                                            <input name="idclieSt" type="hidden" value="${ende.endid}">
+                                            <input name="idcliente" type="hidden" value="${cliente.cliid}">
+                                            <button class="btn btn-warning" type="submit">Alterar</button>
+                                        </form>
+                                    </div>
+                                    <div class="col-6">            
+                                        <form action="${pageContext.request.contextPath}/excluirEndereco" method="POST">
+                                            <input name="idclieSt" type="hidden" value="${ende.endid}">
+                                            <input name="idcliente" type="hidden" value="${cliente.cliid}">                                
+                                            <button class="btn btn-outline-danger" type="submit">Excluir</button>                                
+                                        </form>
+                                    </div>
                                 </div>
+                            </div>
                         </div>
-                        
                     </div>
-                </div>
+
+                </c:forEach>                        
+                <c:choose>
+                   <c:when test="${msgEnd != null}">
+                       <div style="margin-top: 1em;" class="alert alert-danger" role="alert">
+                           <p>Olá ${cliente.clinome}, sentimos muito, mas  esse endereço ${msgEnd}</p>
+                       </div>
+                   </c:when>
+
+               </c:choose>
             </div>
-           
-            </c:forEach>                        
-             <c:choose>
-                <c:when test="${msgEnd != null}">
-                    <div style="margin-top: 1em;" class="alert alert-danger" role="alert">
-                        <p>Olá ${cliente.clinome}, sentimos muito, mas  esse endereço ${msgEnd}</p>
-                    </div>
-                </c:when>
-
-            </c:choose>
         </div>
-    </div>
-
-
+    
   </section>
 </body>
