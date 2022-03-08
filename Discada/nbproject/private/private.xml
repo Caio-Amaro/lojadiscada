@@ -3,10 +3,14 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/C:/Caio/Loja%20Discada/Discada/web/css/styles.css</file>
+            <file>file:/C:/Caio/Loja%20Discada/Discada/src/java/br/com/discada/model/DAO/SegredoDao.java</file>
             <file>file:/C:/Caio/Loja%20Discada/Discada/src/java/br/com/discada/controller/ControleServlet.java</file>
-            <file>file:/C:/Caio/Loja%20Discada/Discada/src/java/br/com/discada/model/DAO/DaoGenerico.java</file>
+            <file>file:/C:/Caio/Loja%20Discada/Discada/src/java/br/com/discada/services/servicoValida.java</file>
             <file>file:/C:/Caio/Loja%20Discada/Discada/src/java/br/com/discada/model/jpa/Clientes.java</file>
-            <file>file:/C:/Caio/Loja%20Discada/Discada/src/java/br/com/discada/model/DAO/ClienteDao.java</file>
+            <file>file:/C:/Caio/Loja%20Discada/Discada/src/java/br/com/discada/model/jpa/Segredo.java</file>
+            <file>file:/C:/Caio/Loja%20Discada/Discada/web/WEB-INF/views/cadastroP2.jsp</file>
+            <file>file:/C:/Caio/Loja%20Discada/Discada/web/WEB-INF/views/paginaDadosPessoais.jsp</file>
         </group>
     </open-files>
 </project-private>

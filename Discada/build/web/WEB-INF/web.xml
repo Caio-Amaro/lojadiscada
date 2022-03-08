@@ -12,14 +12,17 @@
     <servlet-mapping>
         <servlet-name>ControleServlet</servlet-name>
         <url-pattern>/paginaDadosPessoais</url-pattern>
-        <url-pattern>/cadastroP2</url-pattern>
-        <url-pattern>/paginaCartoes</url-pattern>
         <url-pattern>/excluirCartao</url-pattern>
-        <url-pattern>/editarEndereco</url-pattern>
         <url-pattern>/paginaDadosPessoaisSenha</url-pattern>
         <url-pattern>/cadastroCartao</url-pattern>
+        <url-pattern>/deslogar</url-pattern>
         <url-pattern>/paginaLogin</url-pattern>
         <url-pattern>/excluirEndereco</url-pattern>
+        <url-pattern>/cadastroP1</url-pattern>
+        <url-pattern>/cadastroP2</url-pattern>
+        <url-pattern>/paginaCartoes</url-pattern>
+        <url-pattern>/editarEndereco</url-pattern>
+        <url-pattern>/paginaProduto</url-pattern>
         <url-pattern>/gerenciaCliente</url-pattern>
         <url-pattern>/paginaEndereco</url-pattern>
     </servlet-mapping>

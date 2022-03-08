@@ -68,9 +68,7 @@
                     </c:when>
                 </c:choose>
 
-                <p>teste: ${cliente.idsegredo.secid} </p>
-                <p>teste1: ${trocaseg.seclogin} </p>
-                <p>teste2: ${trocaseg.secsenha} </p>
+                
                 <hr>
                 
                 <form action="${pageContext.request.contextPath}/paginaDadosPessoaisSenha" method="POST">

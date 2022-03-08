@@ -13,8 +13,11 @@ import br.com.discada.model.DAO.SegredoDao;
 import br.com.discada.model.jpa.Cartaocredi;
 import br.com.discada.model.jpa.Clientes;
 import br.com.discada.model.jpa.Endereco;
+import br.com.discada.model.jpa.Produto;
 import br.com.discada.model.jpa.Segredo;
+import br.com.discada.services.servicoValida;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -89,6 +92,8 @@ public class ControleServlet extends HttpServlet {
         
         HttpSession session = request.getSession();        
         String userPath = request.getServletPath();
+        Produto selecioneprod;
+        Collection<Produto> selecioneProduto;
         
 // ------------------------------------------------------------------------------------
 // END POINTS MÉTODO GET
@@ -119,6 +124,14 @@ public class ControleServlet extends HttpServlet {
             }
 
 // ------------------------------------------------------------------------------------
+// end point para gerar a listagem dos cartões cadastros ´pelo cliente
+            
+            else if (userPath.equals("/deslogar")) {   
+                
+                session.invalidate();
+                userPath = "/cadastroP2";
+            
+            }
 // ------------------------------------------------------------------------------------
 // end point para gerar a listagem dos cartões cadastros ´pelo cliente
             
@@ -136,12 +149,29 @@ public class ControleServlet extends HttpServlet {
                 session.getAttribute("credito");
              
             }
-                
-                
+  
+// ------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------
+         
+        else if (userPath.equals("/paginaProduto")) {
             
+            
+            String produtoidStr = request.getQueryString();
+            if (produtoidStr != null && !produtoidStr.equals("")) {
+                try {
+                    Produto selecioneProd = (Produto) prodDao.getObjectById(Integer.parseInt(produtoidStr));
+                    session.setAttribute("selecioneProd", selecioneProd);
+                } catch (Exception e) {
+                }
 
-// ------------------------------------------------------------------------------------            
-             else if (userPath.equals("/editarEndereco")){
+            }
+            
+        }
+        
+// --------------------------------------------------------------------------------------            
+// end point para gerar a listagem dos endereços do cliente            
+            
+            else if (userPath.equals("/editarEndereco")){
              
                 String idEndStr = request.getParameter("idclieSt");
                 
@@ -156,7 +186,7 @@ public class ControleServlet extends HttpServlet {
             }
 
 // ------------------------------------------------------------------------------------
-// end point para realizar a busca do login e senha do cliente 
+// end point para gerar os dados de login e senha na página de alteração de dados 
           
         else if (userPath.equals("/paginaDadosPessoais")) {
            
@@ -317,19 +347,20 @@ public class ControleServlet extends HttpServlet {
 // end point para validar a senha e login do cliente 
           
         else if (userPath.equals("/paginaLogin")) {
-        // ATENÇÃO, Não esquecer de levar essa regra de negócio para um pacote controlador
-          
+        // ATENÇÃO, Não esquecer de levar essa regra de negócio para um pacote de serviços
+
             String log = request.getParameter("login");
             String sen = request.getParameter("senha");
             String idsegredo = request.getParameter("idsegredo"); 
 
-            List <Segredo> segr; 
+        
+            List<Segredo> segr; 
             segr = (List<Segredo>) segDao.buscaUsuario(log, sen);
-
+            
             for ( Segredo vam : segr ){
-
                 if(vam != null && vam.getSecsenha().equals(sen) && vam.getSeclogin().equals(log))
                 {
+                
                     int idse = vam.getSecid();
                     int idclit;
                     segDao.setAcesso(true);
@@ -339,37 +370,78 @@ public class ControleServlet extends HttpServlet {
 
                         if(c != null && !c.isEmpty() && !c.equals("")) {
 
-                            for (Clientes vem : c){
+                        for (Clientes vem : c){
 
-                                idclit = vem.getCliid();
-                                try {
-                                    Clientes cli = (Clientes) clieDao.getObjectById(idclit); 
-                                    session.setAttribute("cliente", cli);
-                                    session.getAttribute("cliente");
-                                }   catch (Exception ex) {
-                                        Logger.getLogger(ControleServlet.class.getName()).log(Level.SEVERE, null, ex);
-                                    }
-                            }
+                        idclit = vem.getCliid();
+                         try {
+                        Clientes cli = (Clientes) clieDao.getObjectById(idclit); 
+                        session.setAttribute("cliente", cli);
+                        session.getAttribute("cliente");
+                        } catch (Exception ex) {
+                        Logger.getLogger(ControleServlet.class.getName()).log(Level.SEVERE, null, ex);
+                    }
 
-                            Segredo seg = new Segredo();                
-                            request.getSession().setAttribute("usuario", seg);
-                            session.setAttribute("se", seg);
-                            session.getAttribute("cliente");                
-                            request.setAttribute("msgbem", "Bem vindo!");
-                            userPath = "/gerenciaCliente";
+
                         }
 
-                } else {
-                    userPath = "/cadastroP2";
-                    request.setAttribute("msg", "Informe login e senha corretamente");
-                  }
-            }
+                    Segredo seg = new Segredo();                
+                    request.getSession().setAttribute("usuario", seg);
+                    session.setAttribute("se", seg);
+                    session.getAttribute("cliente");                
+                    request.setAttribute("msgbem", "Bem vindo!");
+                    userPath = "/gerenciaCliente";
 
+
+                    }
+
+                } else  
+                        {
+                            userPath = "/cadastroP2";
+                            request.setAttribute("msg", "Informe login e senha corretamente");
+                        }
+            }                   
+                if (segDao.isAcesso() == false) {request.setAttribute("errologin", "o login e ou a senha não conferem. "
+                    + "Certifique-se dos dados e tente novamente");
+                    userPath = "/cadastroP2";
+                }
+                
+               
+            /*servicoValida recebe = new servicoValida();
+        
+            String log = request.getParameter("login");
+            String sen = request.getParameter("senha");
+            String idsegredo = request.getParameter("idsegredo"); 
+
+            List <Segredo> segr; 
+            segr = (List<Segredo>) segDao.buscaUsuario(log, sen);
+            
+            int idcliente = recebe.validaAcesso(log, sen, segr);
+            
+            if (idcliente != 0) {
+                try {
+                    Clientes cli = (Clientes) clieDao.getObjectById(idcliente); 
+                    session.setAttribute("cliente", cli);
+                    session.getAttribute("cliente");
+                    segDao.setAcesso(true); 
+                }   catch (Exception ex) {
+                        Logger.getLogger(ControleServlet.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                
+                Segredo seg = new Segredo();                
+                request.getSession().setAttribute("usuario", seg);
+                session.setAttribute("se", seg);
+                session.getAttribute("cliente");                
+                request.setAttribute("msgbem", "Bem vindo!");
+                userPath = "/gerenciaCliente";
+                
+            } else {userPath = "/cadastroP2";
+                    request.setAttribute("msg", "Informe login e senha corretamente");}
+           
             if (segDao.isAcesso() == false) {
                 request.setAttribute("errologin", "o login e ou a senha não conferem. "
                 + "Certifique-se dos dados e tente novamente");
                 userPath = "/cadastroP2";
-            }               
+            }  */             
         }
 
 // ------------------------------------------------------------------------------------
@@ -591,66 +663,110 @@ public class ControleServlet extends HttpServlet {
         
          else if(userPath.equals("/cadastroP2")){
             
-            boolean pegouNumero = false;
-            boolean pegouMaiscula = false;
-            boolean pegouMinuscula = false;
-            boolean pegouSimbolo = false;
-            
             String login = request.getParameter("login");
             String password = request.getParameter("password");
             String passwordone = request.getParameter("passwordteste");
+            boolean recebe;
             
-            if (password.equals(passwordone)) {
-                // se senhas iguais condicionar a senhas fortes                    
-                if (password.length() > 6){
-                    request.setAttribute("msgSenha", "Tamanho da senha está OK!");
-                    
-                    for(char s : password.toCharArray()){
-                    // crio array de char para analisar os critérios de forma individual a senha
-                    if (s >= '0' && s <= '9'){
-                        pegouNumero = true; // critério de números
-                    } else if (s >= 'A' && s <= 'Z'){
-                        pegouMaiscula = true; // citério de maiúscula
-                    } else if (s >= 'a' && s <= 'z') {
-                        pegouMinuscula = true; // critério de minúscula
-                     } else {
-                        pegouSimbolo = true;
-                    }
-                 }
-                
-                 if(pegouNumero == true && pegouMaiscula == true && pegouMinuscula == true 
-                         && pegouSimbolo == true){
-                 
-                     Segredo seg = new Segredo();
+            // cria objeto para validar senha forte no pacote de serviços
+            servicoValida valida = new servicoValida();
+            
+            recebe = valida.validaSenha(login, password, passwordone);
+            
+            if (recebe == true) {
+            
+                Segredo seg = new Segredo();
 
-                     seg.setSeclogin(login);
-                     seg.setSecsenha(password);
+                seg.setSeclogin(login);
+                seg.setSecsenha(password);
 
-                     try {
+                    try {
                          segDao.persist(seg);
                          session.setAttribute("se", seg);
                          seg = (Segredo) session.getAttribute("se");
                          userPath = "/cadastroP1";
-                         request.setAttribute("mesgOk", "Senha cadastrada com sucesso! Agora finalize o cadastro.");
+                         request.setAttribute("mensagemValida", valida.getMensagemValida());
 
                      } catch (Exception ex) {
                          Logger.getLogger(ControleServlet.class.getName()).log(Level.SEVERE, null, ex);
                          request.setAttribute("msgErrofinal", "Erro ao cadastrar sua senha");
                      }
             
-                     
-                 }   else { request.setAttribute("msgerromaior", "Sua senha precisa ter "
-                       + "maíscula (A,B,C...), minúscula(a,b,c...), caracter especial(%,@...), número "
-                         + "e no mínimo 6 caratecteres");}
-                    
-               } else { request.setAttribute("msgerrotam", "sua senha precisa ter "
-                       + "6 caratecteres");}
-                
-            } else {request.setAttribute("msgSenhaIgual", "as senhas devem ser iguais!");} // primeira condição: senhas iguais
-            
-            
+            } else { request.setAttribute("mensagemValida", valida.getMensagemValida()); }
            
         }
+ // ----------------------------------------------------------------------------------------------- 
+
+           else if(userPath.equals("/cadastroP1")){
+            
+            Segredo seg = new Segredo();
+            
+            String nome = request.getParameter("nome");
+            String sobrenome = request.getParameter("sobrenome");
+            String cpf = request.getParameter("cpf");
+            String email = request.getParameter("email");
+            String genero = request.getParameter("genero");
+            String ddd = request.getParameter("ddd");
+            String telefone = request.getParameter("tel");
+            String idsegredo = request.getParameter("idsegredo");
+            
+           
+            
+            Clientes client = new Clientes();
+           
+            
+            seg.setSecid(Integer.parseInt(idsegredo));
+            
+            client.setClinome(nome);
+            client.setClisobrenome(sobrenome);
+            client.setClicpf(cpf);
+            client.setCliemail(email);
+            client.setCligenero(genero); 
+            client.setCliddd(ddd);
+            client.setClitelefone(telefone);
+            client.setIdsegredo(seg);
+            client.setCliativo(1);
+            
+           
+            try { 
+                clieDao.persist(client);
+                userPath="/gerenciaCliente";
+                 
+                
+            } catch (Exception ex) {
+                Logger.getLogger(ControleServlet.class.getName()).log(Level.SEVERE, null, ex);
+                userPath="/cadastroP2";
+                
+            }
+            
+            //****---------------------------
+            // Chamando o cliente da sessão login
+                
+                int idclit;
+                List<Clientes> c; 
+                c = (List<Clientes>) clieDao.pegarClienteSegredo(Integer.parseInt(idsegredo));
+                
+                if(c != null && !c.isEmpty() && !c.equals(" ")) {
+                    
+                    for (Clientes vem : c){
+                    
+                    idclit = vem.getCliid();
+                     try {
+                    Clientes cli = (Clientes) clieDao.getObjectById(idclit);
+                    session.setAttribute("cliente", cli);
+                    session.getAttribute("cliente");
+                    } catch (Exception ex) {
+                    Logger.getLogger(ControleServlet.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                
+                     
+                    }
+                
+                }
+             
+        }
+
+// ----------------------------------------------------------------------------------------------- 
 
 // -----------------------------------------------------------------------------------------------            
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

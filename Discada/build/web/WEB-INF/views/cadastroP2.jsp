@@ -25,24 +25,14 @@
                         <p style="margin-left: 4em; margin-top: -3em; font-family: cursive; font-size: 13px;"> Senha forte: "MAIÚSCULO" "minúsculo" "1,2 3..." "@,%,$..." "min. 6 dígitos"</p>
 
                     </div>
-                </form>
+                </form>               
                 <c:choose>
-                    <c:when test="${msgSenhaIgual != null}">
+                    <c:when test="${mensagemValida != null}">
                         <div style="margin-top: 1em;" class="alert alert-danger" role="alert">
-                            <p>Olá! Sentimos muito, mas  ${msgSenhaIgual}</p>
+                            <p>Olá ${cliente.clinome}, sentimos muito, mas  ${mensagemValida}</p>
                         </div>
                     </c:when>
-                    <c:when test="${msgerrotam != null}">
-                        <div style="margin-top: 1em;" class="alert alert-danger" role="alert">
-                            <p>Olá! Sentimos muito, mas ${msgerrotam}</p>
-                        </div>
-                    </c:when>
-                    <c:when test="${msgerromaior != null}">
-                        <div style="margin-top: 1em;" class="alert alert-danger" role="alert">
-                            <p>Olá! Sentimos muito, mas ${msgerromaior}</p>
-                        </div>
-                    </c:when>
-                </c:choose>
+                </c:choose>                  
             </div>
 
             <div class="col-sm-6">
@@ -55,7 +45,7 @@
 
                          <div class="justify-content-md-center" style="width: 80%; margin-left: 3em;">
                              <input type="password" class="form-control" name="senha" required style="margin-bottom: 1em;" placeholder="Insira a Senha">                                    
-                             <input type="hidden" name="idsegredo" value="${se.secid}}"
+                             <input type="hidden" name="idsegredo" value="${se.secid}">
                          </div>
                               
                          <button style="margin-top: 1.5em; margin-left: 3em; width:80%; margin-bottom: 3em;" type="submit" class="btn btn-outline-primary" onclick="vali()">
@@ -63,16 +53,14 @@
                         </button> 
                      </div>
                  </form> 
-                 
+            </div>     
              <c:choose>
                 <c:when test="${errologin != null}">
                     <div style="margin-top: 1em;" class="alert alert-danger" role="alert">
                         <p>Olá ${cliente.clinome}, sentimos muito, mas  ${errologin}</p>
                     </div>
                 </c:when>
-            </c:choose>
-                     
-            </div>
+            </c:choose>            
         </div>
     </section>
 </body>
