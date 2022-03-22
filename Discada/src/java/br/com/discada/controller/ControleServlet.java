@@ -12,9 +12,11 @@ import br.com.discada.model.DAO.ProdutoDao;
 import br.com.discada.model.DAO.SegredoDao;
 import br.com.discada.model.jpa.Cartaocredi;
 import br.com.discada.model.jpa.Clientes;
+import br.com.discada.model.jpa.Cupom;
 import br.com.discada.model.jpa.Endereco;
 import br.com.discada.model.jpa.Produto;
 import br.com.discada.model.jpa.Segredo;
+import br.com.discada.services.ShoppingCart;
 import br.com.discada.services.servicoValida;
 import java.io.IOException;
 import java.util.Collection;
@@ -92,6 +94,7 @@ public class ControleServlet extends HttpServlet {
         
         HttpSession session = request.getSession();        
         String userPath = request.getServletPath();
+        ShoppingCart cart = (ShoppingCart) session.getAttribute("cart");
         Produto selecioneprod;
         Collection<Produto> selecioneProduto;
         
@@ -208,7 +211,35 @@ public class ControleServlet extends HttpServlet {
 
 
 // ------------------------------------------------------------------------------------
+// Encaminhar os dados da compra para finalizar o pedido 
+          
+        else if (userPath.equals("/paginaFinaliza")) {
+           
+             
+            String client = request.getParameter("client");
+            
+            
+            List<Endereco> end;
+            end = (List<Endereco>) endDao.listarEnderecoPorIdCliente(Integer.parseInt(client));
+            session.setAttribute("end", end);
+            session.getAttribute("end");
+            
+            
+            List<Cartaocredi> cred;
+            cred = (List<Cartaocredi>) creDao.listarCartaoPorIdCliente(Integer.parseInt(client));
+            session.setAttribute("cred", cred);
+            session.getAttribute("cred");
+            
+            List<Cupom> cup;
+            cup = (List<Cupom>)cupDao.ListarCupom(Integer.parseInt(client));
+            session.setAttribute("cupo", cup);
+            session.getAttribute("cupo");
+            
+        }           
 
+
+
+// ------------------------------------------------------------------------------------
 // ------------------------------------------------------------------------------------
 
             
@@ -239,6 +270,7 @@ public class ControleServlet extends HttpServlet {
           
         String userPath = request.getServletPath();
         HttpSession session = request.getSession();
+        ShoppingCart cart = (ShoppingCart) session.getAttribute("cart");
           
           
           if(userPath.equals("/Discada")) {}
@@ -697,7 +729,7 @@ public class ControleServlet extends HttpServlet {
         }
  // ----------------------------------------------------------------------------------------------- 
 
-           else if(userPath.equals("/cadastroP1")){
+        else if(userPath.equals("/cadastroP1")){
             
             Segredo seg = new Segredo();
             
@@ -760,13 +792,80 @@ public class ControleServlet extends HttpServlet {
                         }
                 
                      
-                    }
-                
-                }
-             
+                    }                
+                }             
         }
 
 // ----------------------------------------------------------------------------------------------- 
+
+        else if(userPath.equals("/addCart")){
+            
+             if(cart == null) {
+            cart = new ShoppingCart();
+            session.setAttribute("cart", cart);
+           
+            }
+            
+            String produtoid = request.getParameter("produtoId");
+            if(!produtoid.isEmpty()){
+            
+                try {
+                    Produto produto = (Produto) prodDao.getObjectById(Integer.parseInt(produtoid));
+                    cart.addItem(produto);
+                    
+                    
+                            } catch (Exception ex) {
+                    Logger.getLogger(ControleServlet.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
+            
+            }
+                userPath = "/paginaProduto";
+            
+        }
+          
+
+// ----------------------------------------------------------------------------------------------- 
+
+        else if(userPath.equals("/addAcesso")){
+            
+            String clear = request.getParameter("clear");
+            if ((clear != null) && clear.equals("true")){
+                
+                ShoppingCart carta = (ShoppingCart) session.getAttribute("cart");
+                carta.clear();
+            }
+            userPath = "/paginaCompraLista";
+        
+        }
+        
+//---------------------------------------------------------------------------------------------------------
+        
+        else if (userPath.equals("/paginaCompraLista"))
+        {
+            
+            String qtd = request.getParameter("quantidade");
+            String produtoid = request.getParameter("produtoid");
+            
+            int idpro = Integer.parseInt(produtoid);
+           
+                if (produtoid != null) {
+                
+                try {
+                    Produto produto = (Produto) prodDao.getObjectById(idpro);                    
+                    cart.update(produto, qtd);
+                    userPath = "/paginaCompraLista";
+                } catch (Exception ex) {
+                    Logger.getLogger(ControleServlet.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                                           
+                }
+            
+            
+        
+        }
+//---------------------------------------------------------------------------------------------------------
+
 
 // -----------------------------------------------------------------------------------------------            
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

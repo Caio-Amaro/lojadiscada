@@ -48,8 +48,19 @@
                     <div class="col-10 col-md-5" style="margin-top: .4em; margin-bottom: .4em;">
 
                         <i style="font-size: 1.2em;" class="bi-cart-fill me-1"></i>
-                        <a class="btn btn-outline-light" href="/paginaCompraLista" role="button">Carrinho 
-                            <span class="badge bg-light text-dark ms-1 rounded-pill"> 1 </span></a>
+                        <a class="btn btn-outline-light" href="/Discada/paginaCompraLista" role="button">Carrinho 
+                             <span class="badge bg-light text-dark ms-1 rounded-pill">
+                                <c:choose>
+                                    <c:when test="${cart.numberOfItems == null}">
+                                        0
+                                    </c:when>
+                                    <c:otherwise>
+                                        ${cart.numberOfItems}
+                                    </c:otherwise>
+                                </c:choose>
+                            </span>
+                        </a>
+
 
                     </div>
 
