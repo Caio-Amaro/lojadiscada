@@ -24,9 +24,11 @@
         <url-pattern>/paginaCompraLista</url-pattern>
         <url-pattern>/cadastroP2</url-pattern>
         <url-pattern>/paginaCartoes</url-pattern>
+        <url-pattern>/cupomTroca</url-pattern>
         <url-pattern>/paginaFinaliza</url-pattern>
         <url-pattern>/editarEndereco</url-pattern>
         <url-pattern>/paginaProduto</url-pattern>
+        <url-pattern>/paginaCupom</url-pattern>
         <url-pattern>/gerenciaCliente</url-pattern>
         <url-pattern>/paginaEndereco</url-pattern>
     </servlet-mapping>

@@ -17,6 +17,8 @@ import br.com.discada.model.jpa.Endereco;
 import br.com.discada.model.jpa.Produto;
 import br.com.discada.model.jpa.Segredo;
 import br.com.discada.services.ShoppingCart;
+import br.com.discada.services.ShoppingCartItem;
+import br.com.discada.services.controleCupom;
 import br.com.discada.services.servicoValida;
 import java.io.IOException;
 import java.util.Collection;
@@ -37,7 +39,7 @@ import javax.servlet.http.HttpSession;
  */
 @WebServlet(name = "ControleServlet",
         loadOnStartup = 1, 
-        urlPatterns = {"/update", "/enviarPedido", "/paginaCompraLista", "/excluirEndereco",
+        urlPatterns = {"/update", "/enviarPedido", "/paginaCompraLista", "/excluirEndereco", "/cupomTroca",
             "/paginaFinaliza", "/addCart", "/addItem", "/paginaFormaPagamento", "/paginaProduto", 
             "/addAcesso", "/deslogar", "/paginaLogin", "/paginaHistoricopedido", "/editarEndereco",
             "/paginaEndereco", "/paginaDadosPessoais", "/cadastroCartao", "/paginaCupom", "/paginaDadosPessoaisSenha",
@@ -211,7 +213,7 @@ public class ControleServlet extends HttpServlet {
 
 
 // ------------------------------------------------------------------------------------
-// Encaminhar os dados da compra para finalizar o pedido 
+// Gera as listagens de endereço, cartão de crédito e cupons na página de finalização da compra
           
         else if (userPath.equals("/paginaFinaliza")) {
            
@@ -238,6 +240,16 @@ public class ControleServlet extends HttpServlet {
         }           
 
 
+            //---------------------------------------------------------------------------------------------------------
+        
+        else if(userPath.equals("/paginaCupom")){
+            
+            String idcl = request.getParameter("idcl");
+            List<Cupom> cup;
+            cup = (List<Cupom>)cupDao.ListarCupom(Integer.parseInt(idcl));
+            session.setAttribute("cupo", cup);
+            session.getAttribute("cupo");        
+        }
 
 // ------------------------------------------------------------------------------------
 // ------------------------------------------------------------------------------------
@@ -848,6 +860,7 @@ public class ControleServlet extends HttpServlet {
             String produtoid = request.getParameter("produtoid");
             
             int idpro = Integer.parseInt(produtoid);
+            
            
                 if (produtoid != null) {
                 
@@ -860,13 +873,115 @@ public class ControleServlet extends HttpServlet {
                 }
                                            
                 }
-            
-            
-        
         }
+
 //---------------------------------------------------------------------------------------------------------
+        
+        else if (userPath.equals("/cupomTroca"))
+        {
+           
+            String idendereco = request.getParameter("envio");
+            String idpagamento = request.getParameter("cartao");
+            String vlrtotal = request.getParameter("vlrtotal");
+            String vlrtotalpedido = request.getParameter("vlrtotalpedido");
+            String idcupom = request.getParameter("idcupom");
+            String vlraplicado = request.getParameter("valoraplicado");
+
+            float vltot = (float) Double.parseDouble("vlrtotal");
+            float vlapl = (float) Double.parseDouble("vlraplicado");
+
+            if (vltot >= 0) {
+
+                vltot = vltot - vlapl;
+                request.setAttribute("vlrFinalCupom", vltot);
+                request.setAttribute("msgpagamento", "Ainda falta R$ " + vltot + " para pagar");
+
+                if (vltot <= 0) {
+
+                    vltot = 0;
+                    request.setAttribute("vlrFinalCupom", vltot);
+                    request.setAttribute("msgpagamento", "Você efetuaou o pagamento");
+                }                        
+            }
+
+            else if (vltot == 0) {
+                vltot = 0;
+                request.setAttribute("vlrFinalCupom", vltot);
+                request.setAttribute("msgpagamento", "Você efetuaou o pagamento");
+            }
+
+            else {
+                vltot = 0;
+                request.setAttribute("vlrFinalCupom", vltot);
+                request.setAttribute("msgpagamento", "Seu pagamento foi maior que valor devido, ajustamos o seu pagamento");
+
+            }
+            userPath = "/paginaFinaliza";
+            
+        }
+          
+//---------------------------------------------------------------------------------------------------------
+        
+        else if (userPath.equals("/paginaFinaliza"))
+        {
+            
+            // Recebendo os dados do formulário cupom de troca, desconto e o id do cliente
+            String valorcup[];
+            valorcup = request.getParameterValues("valorescup");
+            String cuponsid[] = request.getParameterValues("idcupomtroca");
+            String idcliente = request.getParameter("idcl");
+            String cupondesid = request.getParameter("cupdescontoid");
+            String valordesconto = request.getParameter("valordocupom");
+            String enviacupom = request.getParameter("enviacupom");
+            
+            // Recebendo valor da compra
+            String valorcompra = request.getParameter("valorcompra");
+            
+            if (enviacupom != null || !enviacupom.equals(" ")){
+            
+            //Chamando o método para somar os valores dos cupons de troca
+            double somaTroca = 0;
+            controleCupom cuptoca = new controleCupom();
+             
+                if (valorcup != null) {
+
+                    somaTroca = cuptoca.somaCupomTroca(valorcup);
+                    request.setAttribute("soma", somaTroca); // armazena o valor somado
+                    request.setAttribute("MSG10", cuptoca.mensagemCupom);
+                }
+
+                // Calcular o valor do débito com uso dos cupons
+                double vlrcompra = 0;
+                double vlrdesconto = 0;
+
+                if (valorcompra != null){ // consistindo compra total
+                    vlrcompra = Double.parseDouble(valorcompra);
+                } 
+
+                if (valordesconto != null) {
+                     vlrdesconto = Double.parseDouble(valordesconto);
+                }
+
+                double vlrFinalCupom = cuptoca.valorTotalCupom(somaTroca, vlrdesconto, vlrcompra);
+
+                request.setAttribute("vlrFinalCupom", vlrFinalCupom);
+                request.setAttribute("enviacupom", 1);
+
+                }   else {             
+                    }
+            
+            
+            
+            
+            
+            userPath = "/paginaFinaliza";
+            
+            
+            
+        }
 
 
+//---------------------------------------------------------------------------------------------------------
 // -----------------------------------------------------------------------------------------------            
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
            String url = "/WEB-INF/views" + userPath + ".jsp";

@@ -76,7 +76,7 @@ public class ShoppingCart {
              for(ShoppingCartItem scItem : items)
              {
                
-                 if(scItem.getProduto().getProid().intValue() == produto.getProid().intValue());
+                 if(scItem.getProduto().getProid().intValue() == produto.getProid().intValue())
                  {
                      numberOfItems += (qty - scItem.getQuantity());
                      subtotal += (qty - scItem.getQuantity()) * produto.getPropreco();

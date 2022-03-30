@@ -85,7 +85,10 @@
                                 <i style="font-size: 2.5em; margin-left: 45%;" class="bi bi-cash-coin"></i>  
                                 <h5 class="card-title" style="text-align: center; margin-top: .5em;">CUPONS E TROCAS</h5>
                                 <p class="card-text" style="text-align: center;">Aqui você cunsulta seus cupos promocionais e ou reembolsos</p>
-                                <a href="/Discada/paginaCupom" class="btn btn-outline-info">Visitar</a>                        
+                                <form action="${pageContext.request.contextPath}/paginaCupom" method="GET">
+                                    <input type="hidden" value="${cliente.cliid}" name="idcl">
+                                    <button type="submit" class="btn btn-outline-info">Visitar</button>                                
+                                </form>
                           </div>
                         </div>
                     </div>

@@ -4,7 +4,10 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/Caio/Loja%20Discada/Discada/src/java/br/com/discada/controller/ControleServlet.java</file>
+            <file>file:/C:/Caio/Loja%20Discada/Discada/src/java/br/com/discada/services/controleCupom.java</file>
             <file>file:/C:/Caio/Loja%20Discada/Discada/web/WEB-INF/views/paginaFinaliza.jsp</file>
+            <file>file:/C:/Caio/Loja%20Discada/Discada/web/WEB-INF/views/paginaProduto.jsp</file>
+            <file>file:/C:/Caio/Loja%20Discada/Discada/web/WEB-INF/jspf/header.jspf</file>
         </group>
     </open-files>
 </project-private>
