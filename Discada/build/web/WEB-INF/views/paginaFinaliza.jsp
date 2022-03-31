@@ -27,19 +27,21 @@
                                     <div class="card-body">
                                         <h5 id="sloganUm" class="card-title">Escolha o Cupom de Troca</h5>
                                         <p>Combine seus cupons, caso queira.</p>
-                                                <c:forEach var="cup" items="${cupo}"> 
-                                                    <c:choose>
-                                                        <c:when test="${cup.idtipo == 1 && enviacupom != 1}">
-                                                            <p>
-                                                                <input name="valorescup" type="checkbox" value="${cup.valorcupom}">
-                                                                <input style="display:none;" name="idcupomtroca" type="checkbox" value="${cup.idcupom}" checked>                                                          
-                                                                <label class="form-check-label" for="flexCheckDefault">
-                                                                    ${cup.nomecupom} : R$ ${cup.valorcupom}
-                                                                </label>
-                                                            </p>
-                                                        </c:when>
-                                                    </c:choose>
-                                                </c:forEach>                                                                                                    
+                                            <c:forEach var="cup" items="${cupo}">
+                                                <div class="form-check">
+                                                <c:choose>
+                                                    <c:when test="${cup.idtipo == 1 && enviacupom != 1}">
+                                                        <p>
+                                                            <input class="form-check-input" name="idcupomtroca" type="checkbox" value="${cup.idcupom}">
+                                                            <%--<input class="form-check-input" name="valorescup" type="checkbox" value="${cup.valorcupom}">--%>                                                                                                                     
+                                                            <label class="form-check-label" for="flexCheckDefault">
+                                                                ${cup.nomecupom} : R$ ${cup.valorcupom} ${cup.idcupom}
+                                                            </label>
+                                                        </p>
+                                                    </c:when>
+                                                </c:choose>
+                                                </div>
+                                            </c:forEach>                                                                                                    
                                     </div>
                                 </div>
                             </div>
@@ -51,16 +53,17 @@
                                     <div class="card-body">
                                         
                                         <h5 id="sloganUm" class="card-title">Escolha o Cupom de Desconto</h5>
-                                        <p>Apenas um cupom de desconto é válido</p>
-                                        <select class="form-select" name="valordocupom" multiple aria-label="multiple select example">
+                                        <p>Apenas um cupom de desconto é válido</p>                                        
                                             <c:forEach var="cup" items="${cupo}">
                                                 <c:choose>
                                                     <c:when test="${cup.idtipo != 1 && enviacupom != 1}">
-                                                        <option value="${cup.valorcupom}">${cup.nomecupom} ${cup.valorcupom}% </option>                                                        
+                                                        <span>${cup.nomecupom} ${cup.valorcupom}% </span>
+                                                        <p>Insira esse código: <strong>${cup.idcupom}</strong></p>
+                                                        <input type="hidden" name="valordocupom" value="${cup.valorcupom}">
                                                     </c:when>
                                                 </c:choose>                                                
                                             </c:forEach>
-                                        </select>                                     
+                                        <input type="text" class="form-control" name="cupdescontoid" value="${cup.idcupom}" placeholder="código aqui">
                                     </div>
                                 </div>
                             </div>
@@ -68,6 +71,7 @@
                     </div>
                 <input type="hidden" name="valorcompra" value="${cart.subtotal}">
                 <input type="hidden" name="enviacupom" value="1">
+                <input type="hidden" name="idcl" value="${cliente.cliid}">
                 
                 <c:choose>
                     <c:when test="${enviacupom != 1}">
@@ -76,7 +80,7 @@
                     <c:otherwise>                        
                         <button style="margin-top: 2em; width: 50%;" disabled id="botbot" type="submit" class="btn btn-outline-dark">CUPOM JÁ APLICADO</button>         
                         <div style="margin-top: 1em;" class="alert alert-info" role="alert">
-                            <p>Olá ${cliente.clinome}, seus cupons foram aplicados. Finalize o pagamento e obrigado!</p>
+                            <p>Olá ${cliente.clinome}, cupom desabilitado pelo estágio da compra!</p>
                         </div>
                     </c:otherwise>
                 </c:choose>
@@ -116,33 +120,53 @@
                                 <div class="card-deck" id="blockProductDois">
                                     <div class="card">
                                         <div class="card-body">
-                                          <h5 id="sloganUm"> Escolha o Valor para o método de pagamento </h5>
-                                          <p> Valor Total Do Pedido : <strong>R$ ${cart.subtotal}</strong></p>
-                                          <p> Valor a ser acertado é de <strong>R$ <fmt:formatNumber value="${vlrFinalCupom}" type="currency"  /></strong></p>                                      
-                                          <input name="vlrtotal" value="<fmt:formatNumber value="${vlrFinalCupom}" type="currency"  />" type="hidden"> <%-- controlar as subtrações no servlet --%>
+                                            <h5 id="sloganUm"> Escolha o Valor para o método de pagamento </h5>
+                                            <p> Valor Total Do Pedido : <strong><fmt:formatNumber value=" ${cart.subtotal}" type="currency"  /></strong></p>
+                                            <c:choose> 
+                                                <c:when test="${vlrFinalCupom == null}">
+                                                    <p> Valor a ser acertado é de <strong><fmt:formatNumber value=" ${cart.subtotal}" type="currency"  /></strong></p>
+                                                    <input name="vlrtotal" value="${cart.subtotal}" type="hidden"> <%-- controlar as subtrações no servlet --%>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <span> Valor a ser acertado é de <fmt:formatNumber value="${vlrFinalCupom}" type="currency"  /></span>
+                                                    <%--<p> Valor a ser acertado é de <strong>${vlrFinalCupom}</strong></p>--%>
+                                                    <input name="vlrtotal" value="${vlrFinalCupom}" type="hidden"> <%-- controlar as subtrações no servlet --%>
+                                                </c:otherwise>
+                                          </c:choose>
+                                          
                                           <input name="vlrtotalpedido" value="${cart.subtotal}" type="hidden"> <%-- valor total do pedido --%>
                                           <hr>
                                           <p style="text-align: center;"><strong>Você pode usar mais de um cartão! Escolha um cartão acima e aplique o valor</strong></p>
-
+                                          <input type="hidden" name="enviacupom" value="1">
                                           <input id="ent" type="text" class="form-control" name="valoraplicado" value="" placeholder="INSIRA APENAS O VALOR">
-                                          <button id="botCup" type="submit" class="btn btn-outline-dark">APLICAR</button>
+                                          <c:choose> 
+                                                <c:when test="${vlrFinalCupom != 0 || vlrFinalCupom > 0}">
+                                                    <button id="botCupdois" type="submit" class="btn btn-outline-dark">APLICAR</button>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <button id="botCupdois" disabled type="submit" class="btn btn-dark">CONCLUÍDO!</button>
+                                                </c:otherwise>
+                                          </c:choose>
+                                          
                                         </div>
                                     </div>
-                                          <p> ${msgValor} </p>
-                                          <p> ${msgpagamento}</p>
+                                        <div style="margin-top: 1em;" class="alert alert-info" role="alert">
+                                            <p>Olá ${cliente.clinome}, ${msgpagamento}</p>
+                                        </div>
+                                    <input type="hidden" name="idcl" value="${cliente.cliid}">     
                                 </div>
                             </div>
                         </div>
                     </form>
-                </div>            
-        <hr>
-
+                </div> 
         <div class="container">
-            <a href="finalizaCompraDois.html" type="button" class="btn btn-OUTLINE-success">CONFIRMA</a>
-            <p>O BOTÃO ACIMA SÓ ESTARÁ DISPONÍVEL ASSIM QUE O VALOR DO PAGAMENTO FOR IGUAL R$ 0.00 </p>
-            <p>SE O VALOR DO CUPOM FOR SUPERIOR A COMPRA, GERA UM NOVO CUPOM COM A DIFERENÇA (SOBRA DO VALOR).</p>
+            <form action="${pageContext.request.contextPath}/cupomTroca" method="POST">
+                <c:if test="${vlrFinalCupom == 0}">
+                    <button style="margin-left:50em; " type="submit" class="btn btn-OUTLINE-success">APENAS CONFIRME SUA AQUI!</button>
+                </c:if>
+            </form>
         </div>
-
+        <hr>
         
                   
     </section>

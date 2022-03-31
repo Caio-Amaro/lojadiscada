@@ -1,20 +1,28 @@
 
 package br.com.discada.services;
 
+import br.com.discada.model.DAO.CupomDao;
+import br.com.discada.model.jpa.Cupom;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.ejb.EJB;
+
 public class controleCupom {
     
     public double somaCupomTroca;    
     public String mensagemCupom;
     double calculoTotalCupom;
+    @EJB
+    private CupomDao cupDao;
     
-    public double somaCupomTroca (String[] cupons) {
+    public double somaCupomTroca (String[] cupons){
         
         
         if(cupons != null) {
             for (String cup : cupons)
             {
                double aux = Double.parseDouble(cup);
-               somaCupomTroca = aux + somaCupomTroca;
+               somaCupomTroca = aux + somaCupomTroca;                
             }
             this.mensagemCupom = "Aplicado R$ " + somaCupomTroca + "em cupom de troca";
         }   else {
@@ -24,6 +32,8 @@ public class controleCupom {
         return this.somaCupomTroca;
     
    }
+    
+   public void excluiCupom (Cupom cupomid) {}
    
    public double valorTotalCupom (double somaTroca, double desconto, double somaCompra) {
    

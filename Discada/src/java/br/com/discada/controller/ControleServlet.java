@@ -14,14 +14,20 @@ import br.com.discada.model.jpa.Cartaocredi;
 import br.com.discada.model.jpa.Clientes;
 import br.com.discada.model.jpa.Cupom;
 import br.com.discada.model.jpa.Endereco;
+import br.com.discada.model.jpa.Pedido;
 import br.com.discada.model.jpa.Produto;
 import br.com.discada.model.jpa.Segredo;
+import br.com.discada.model.jpa.Tipostatus;
 import br.com.discada.services.ShoppingCart;
 import br.com.discada.services.ShoppingCartItem;
 import br.com.discada.services.controleCupom;
 import br.com.discada.services.servicoValida;
+import static com.sun.xml.bind.util.CalendarConv.formatter;
 import java.io.IOException;
+import java.text.NumberFormat;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -879,60 +885,113 @@ public class ControleServlet extends HttpServlet {
         
         else if (userPath.equals("/cupomTroca"))
         {
-           
+            NumberFormat formatter = NumberFormat.getCurrencyInstance();
+            formatter.setMaximumFractionDigits(2);
+            
+            String idcliente = request.getParameter("idcl");
             String idendereco = request.getParameter("envio");
             String idpagamento = request.getParameter("cartao");
             String vlrtotal = request.getParameter("vlrtotal");
             String vlrtotalpedido = request.getParameter("vlrtotalpedido");
             String idcupom = request.getParameter("idcupom");
             String vlraplicado = request.getParameter("valoraplicado");
-
-            float vltot = (float) Double.parseDouble("vlrtotal");
-            float vlapl = (float) Double.parseDouble("vlraplicado");
+            String enviacupom = request.getParameter("enviacupom");
+            
+           
+            double vltotal = Double.parseDouble(vlrtotalpedido);
+            double vltot = Double.parseDouble(vlrtotal);
+            double vlapl = Double.parseDouble(vlraplicado);
 
             if (vltot >= 0) {
 
                 vltot = vltot - vlapl;
+                formatter.format(vltot);                
                 request.setAttribute("vlrFinalCupom", vltot);
                 request.setAttribute("msgpagamento", "Ainda falta R$ " + vltot + " para pagar");
-
+                request.setAttribute("enviacupom", enviacupom);
+                request.setAttribute("MSG10", "Você inciou o pagamento, seus cupons foram desativados! Obrigado.");
+                
                 if (vltot <= 0) {
 
-                    vltot = 0;
+                    vltot = 0.0;
                     request.setAttribute("vlrFinalCupom", vltot);
-                    request.setAttribute("msgpagamento", "Você efetuaou o pagamento");
-                }                        
-            }
+                    request.setAttribute("msgpagamento", " parabéns! Você efetuou o pagamento");
+                    request.setAttribute("enviacupom", enviacupom);
+                    
+                    // Iniciar o processo de incluir pedido ni banco de dados
+                    // Invoicando as classes associadas a classe de pedido
+                    Pedido pedid = new Pedido();
+                    Clientes cl = new Clientes();
+                    Endereco en = new Endereco();
+                    Tipostatus ti = new Tipostatus();
+                    Cartaocredi cr = new Cartaocredi();
+                    
+                    // data atual
+                    Calendar cal = new GregorianCalendar();
+                    
+                    // -----
+                    int idc = Integer.parseInt(idcliente);
+                    int idstatus = 1;
+                    // injetando o id das classes associadas
+                    cl.setCliid(idc);
+                    en.setEndid(Integer.parseInt(idendereco));
+                    ti.setIdtipostatus(idstatus);
+                    cr.setCreid(Integer.parseInt(idpagamento));
+                    
+                    pedid.setIdcliente(cl);
+                    pedid.setIdendereco(en);
+                    pedid.setIdtipostatus(ti);
+                    pedid.setValortotal(vltotal);
+                    pedid.setData(cal.getTime());
+                    pedid.setFormapag(1);
+                    
+                    try {
+                    pDao.persist(pedid);
+                    //request.setAttribute("msgped", "Pedido Solicitado com Sucesso");                
+                    session.getAttribute("pedido");
+                    session.setAttribute("pedido", pedid);
+                    
+                    }   catch (Exception ex) {                        
+                            Logger.getLogger(ControleServlet.class.getName()).log(Level.SEVERE, null, ex);
+                        }                        
+                }
 
-            else if (vltot == 0) {
-                vltot = 0;
+            /*else if (vltot == 0) {
+                vltot = 0.0;
                 request.setAttribute("vlrFinalCupom", vltot);
-                request.setAttribute("msgpagamento", "Você efetuaou o pagamento");
+                request.setAttribute("msgpagamento", " parabéns! Você efetuou o pagamento");
+                request.setAttribute("enviacupom", enviacupom);
             }
 
             else {
-                vltot = 0;
+                vltot = 0.0;
                 request.setAttribute("vlrFinalCupom", vltot);
                 request.setAttribute("msgpagamento", "Seu pagamento foi maior que valor devido, ajustamos o seu pagamento");
+                request.setAttribute("enviacupom", enviacupom);
 
-            }
+            }*/
+            
+            
             userPath = "/paginaFinaliza";
             
-        }
-          
+            }
+        }  
 //---------------------------------------------------------------------------------------------------------
         
-        else if (userPath.equals("/paginaFinaliza"))
-        {
-            
+        else if (userPath.equals("/paginaFinaliza")){
+            NumberFormat formatter = NumberFormat.getCurrencyInstance();
+            formatter.setMaximumFractionDigits(2);
             // Recebendo os dados do formulário cupom de troca, desconto e o id do cliente
             String valorcup[];
-            valorcup = request.getParameterValues("valorescup");
-            String cuponsid[] = request.getParameterValues("idcupomtroca");
+            valorcup = request.getParameterValues("valorescup"); // array com os valor dos cupons de troca
+            String cuponsid[] = request.getParameterValues("idcupomtroca"); // array com os id´s dos cupons de troca
+            
             String idcliente = request.getParameter("idcl");
-            String cupondesid = request.getParameter("cupdescontoid");
-            String valordesconto = request.getParameter("valordocupom");
-            String enviacupom = request.getParameter("enviacupom");
+            
+            String cupondesid = request.getParameter("cupdescontoid"); // id do cupom de desconto
+            String valordesconto = request.getParameter("valordocupom"); // valor do cupom de desconto
+            
+            String enviacupom = request.getParameter("enviacupom"); // controle para cionar a pausa nos cupons
             
             // Recebendo valor da compra
             String valorcompra = request.getParameter("valorcompra");
@@ -943,13 +1002,32 @@ public class ControleServlet extends HttpServlet {
             double somaTroca = 0;
             controleCupom cuptoca = new controleCupom();
              
-                if (valorcup != null) {
+                if (cuponsid != null) {
 
-                    somaTroca = cuptoca.somaCupomTroca(valorcup);
-                    request.setAttribute("soma", somaTroca); // armazena o valor somado
-                    request.setAttribute("MSG10", cuptoca.mensagemCupom);
+                    request.setAttribute("soma", somaTroca); // armazena o valor somado                
+                   
+                    if(cuponsid != null){
+                        int idcupy = 0;
+                        
+                        for(String cupt : cuponsid){
+                            idcupy = Integer.parseInt(cupt);
+                            try {
+                                Cupom cul = (Cupom) cupDao.getObjectById(idcupy);
+                                double aux = cul.getValorcupom();
+                                somaTroca = aux + somaTroca; 
+                                
+                                cupDao.remover(cul);
+                            }   catch (Exception ex) {
+                                    Logger.getLogger(ControleServlet.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                        }
+                    
+                    }
+                    
+                    request.setAttribute("soma", somaTroca);
                 }
-
+            
+               
                 // Calcular o valor do débito com uso dos cupons
                 double vlrcompra = 0;
                 double vlrdesconto = 0;
@@ -958,29 +1036,66 @@ public class ControleServlet extends HttpServlet {
                     vlrcompra = Double.parseDouble(valorcompra);
                 } 
 
-                if (valordesconto != null) {
+                if (valordesconto != null) { // consiste para valor do desconto 
                      vlrdesconto = Double.parseDouble(valordesconto);
+                     try {
+                        Cupom cupomde = (Cupom) cupDao.getObjectById(Integer.parseInt(cupondesid));                        
+                        cupDao.remover(cupomde);
+                    }   catch (Exception ex) {
+                            Logger.getLogger(ControleServlet.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                 }
-
+                
+                // somaTroca são os cupons de troca somados
+                // vlrdesconto é o valor do desconto aplicado
+                // vlrcompra é o valor da compra. Total do pedido realizado
                 double vlrFinalCupom = cuptoca.valorTotalCupom(somaTroca, vlrdesconto, vlrcompra);
-
+                
+                // Gerar um novo cupom caso
+                formatter.format(vlrFinalCupom);
                 request.setAttribute("vlrFinalCupom", vlrFinalCupom);
+                
+                if (vlrFinalCupom < 0) {
+                
+                    Clientes cl = new Clientes();
+                    Cupom cup = new Cupom();
+                    int idclien = Integer.parseInt(idcliente);
+                    cl.setCliid(idclien);
+                    
+                    double novovalorcupom = ((vlrFinalCupom < 0) ? -vlrFinalCupom : vlrFinalCupom);
+                    
+                    String nomeCupom = "dif_troca - " + idclien;
+                    
+                    
+                    
+                    formatter.format(vlrcompra);
+                    formatter.format(novovalorcupom);
+                    
+                    cup.setIdclientecup(cl);
+                    cup.setIdtipo(1);
+                    cup.setNomecupom(nomeCupom);
+                    cup.setValorcupom(novovalorcupom);
+                    
+                    request.setAttribute("vlrFinalCupom", 0);
+                    request.setAttribute("msgpagamento", "O valor do seu cupom foi maior que a compra. "
+                            + "Geramos um novo cupom da diferença. Pagamento efetuado com sucesso!");
+                    
+                    try {
+                        cupDao.persist(cup);
+                    } catch (Exception ex) {
+                        Logger.getLogger(ControleServlet.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                  
+                }
+                
+                
+                
                 request.setAttribute("enviacupom", 1);
 
-                }   else {             
-                    }
-            
-            
-            
-            
-            
-            userPath = "/paginaFinaliza";
-            
-            
-            
+        }  
+           
+            userPath = "/paginaFinaliza";            
         }
-
-
 //---------------------------------------------------------------------------------------------------------
 // -----------------------------------------------------------------------------------------------            
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
