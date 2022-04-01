@@ -35,7 +35,7 @@
                                                             <input class="form-check-input" name="idcupomtroca" type="checkbox" value="${cup.idcupom}">
                                                             <%--<input class="form-check-input" name="valorescup" type="checkbox" value="${cup.valorcupom}">--%>                                                                                                                     
                                                             <label class="form-check-label" for="flexCheckDefault">
-                                                                ${cup.nomecupom} : R$ ${cup.valorcupom} ${cup.idcupom}
+                                                                ${cup.nomecupom} : R$ ${cup.valorcupom}
                                                             </label>
                                                         </p>
                                                     </c:when>
@@ -99,7 +99,7 @@
                                 <h6 id="sloganUm"> ESCOLHA SEU ENDEREÇO DE ENVIO ABAIXO OU <a href="/Discada/paginaEndereco" type="button" class="btn btn-outline-dark"><i class="bi bi-house-door"></i> Cadastrar Novo Endereço</a></h6>
                                 <select name="envio" class="form-select" multiple aria-label="multiple select example">                            
                                     <c:forEach var="en" items="${end}">
-                                        <option required selected value="${en.endid}"> ${en.endnomedestino} : CEP ${en.endcep}</option>
+                                        <option required value="${en.endid}"> ${en.endnomedestino} : CEP ${en.endcep}</option>
                                     </c:forEach> 
 
                                 </select>
@@ -160,8 +160,11 @@
                     </form>
                 </div> 
         <div class="container">
-            <form action="${pageContext.request.contextPath}/cupomTroca" method="POST">
+            <form action="${pageContext.request.contextPath}/paginaFinalizaDois" method="POST">
                 <c:if test="${vlrFinalCupom == 0}">
+                    <input type="hidden" name="valorsomacupi" value="${vlrCum}">
+                    <input type="hidden" name="idpedido" value="${pedido.idpedido}">
+                    <input type="hidden" name="clid" value="${cliente.cliid}">
                     <button style="margin-left:50em; " type="submit" class="btn btn-OUTLINE-success">APENAS CONFIRME SUA AQUI!</button>
                 </c:if>
             </form>

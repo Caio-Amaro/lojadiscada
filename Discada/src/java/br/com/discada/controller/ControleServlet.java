@@ -14,9 +14,11 @@ import br.com.discada.model.jpa.Cartaocredi;
 import br.com.discada.model.jpa.Clientes;
 import br.com.discada.model.jpa.Cupom;
 import br.com.discada.model.jpa.Endereco;
+import br.com.discada.model.jpa.Itempedido;
 import br.com.discada.model.jpa.Pedido;
 import br.com.discada.model.jpa.Produto;
 import br.com.discada.model.jpa.Segredo;
+import br.com.discada.model.jpa.Statuspostagem;
 import br.com.discada.model.jpa.Tipostatus;
 import br.com.discada.services.ShoppingCart;
 import br.com.discada.services.ShoppingCartItem;
@@ -46,11 +48,11 @@ import javax.servlet.http.HttpSession;
 @WebServlet(name = "ControleServlet",
         loadOnStartup = 1, 
         urlPatterns = {"/update", "/enviarPedido", "/paginaCompraLista", "/excluirEndereco", "/cupomTroca",
-            "/paginaFinaliza", "/addCart", "/addItem", "/paginaFormaPagamento", "/paginaProduto", 
-            "/addAcesso", "/deslogar", "/paginaLogin", "/paginaHistoricopedido", "/editarEndereco",
+            "/paginaFinaliza", "/addCart", "/addItem", "/paginaFormaPagamento", "/paginaProduto", "/paginaFinalizaDois",
+            "/addAcesso", "/deslogar", "/paginaLogin", "/paginaHistoricopedido", "/editarEndereco", "/paginaAgradecimento",
             "/paginaEndereco", "/paginaDadosPessoais", "/cadastroCartao", "/paginaCupom", "/paginaDadosPessoaisSenha",
-            "/paginaCartoes", "/gerenciaCliente", "/excluirCartao", "/cadastroP2", "/consultaProduto", 
-            "/cadastroP1", "/detalhePedido", "/detalheItemPedido", "/consultaCategoria", "/paginaHistoricoNome"})
+            "/paginaCartoes", "/gerenciaCliente", "/excluirCartao", "/cadastroP2", "/consultaProduto", "/detalheItemPedido",
+            "/cadastroP1", "/detalhePedido", "/consultaCategoria", "/paginaHistoricoNome"})
 
 public class ControleServlet extends HttpServlet {
     
@@ -256,7 +258,55 @@ public class ControleServlet extends HttpServlet {
             session.setAttribute("cupo", cup);
             session.getAttribute("cupo");        
         }
-
+//---------------------------------------------------------------------------------------------------------
+        
+        
+        
+        else if(userPath.equals("/paginaHistoricoPedido"))
+        {    
+           
+            String idcl = request.getParameter("idcl");
+            List<Pedido> pedid;
+            pedid = (List<Pedido>)pDao.ListarPedido(Integer.parseInt(idcl));
+            session.setAttribute("pedid", pedid);
+            session.getAttribute("pedid");          
+               
+          
+        }
+//---------------------------------------------------------------------------------------------------------
+          else if(userPath.equals("/detalhePedido"))
+         {
+         
+            String idpe = request.getParameter("idpedi");
+            List<Itempedido> en;
+            en = (List<Itempedido>) itDao.listarItemPedido(Integer.parseInt(idpe));
+            request.setAttribute("item", en);
+            request.getAttribute("item"); 
+         
+         }
+         
+//---------------------------------------------------------------------------------------------------------
+        
+         else if (userPath.equals("/detalheItemPedido")){
+            
+            String iditem = request.getParameter("idpediit");
+            
+            if(iditem != null && !iditem.equals(" ")){
+                
+                int idt = Integer.parseInt(iditem);
+            
+                try {
+                    Itempedido it = (Itempedido) itDao.getObjectById(idt);
+                    request.setAttribute("iditem", it);
+                            
+                            } catch (Exception ex) {
+                    Logger.getLogger(ControleServlet.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            
+            }
+           
+        }
+         
 // ------------------------------------------------------------------------------------
 // ------------------------------------------------------------------------------------
 
@@ -1089,12 +1139,200 @@ public class ControleServlet extends HttpServlet {
                 }
                 
                 
-                
+                request.setAttribute("vlrCum", cuptoca.getValorApenasCupom());
                 request.setAttribute("enviacupom", 1);
 
         }  
            
             userPath = "/paginaFinaliza";            
+        }
+
+//---------------------------------------------------------------------------------------------------------
+        
+        else if (userPath.equals("/paginaFinalizaDois"))
+        {
+            
+            String idpe = request.getParameter("idpedido");
+            String clid = request.getParameter("clid");
+            String valorcum = request.getParameter("valorsomacupi");
+            
+            /*double vlrcum = Double.parseDouble(valorcum);
+            request.setAttribute("vlrcum", vlrcum);*/
+            
+            int idstatus = 1;
+         
+            
+            if (idpe != null && !idpe.equals("")) {
+            
+                      
+                ShoppingCartItem in = new ShoppingCartItem();
+                Itempedido pedido = new Itempedido();
+                Produto produto = new Produto();
+
+                Pedido pedid = new Pedido();
+                Clientes cl = new Clientes();
+                Endereco en = new Endereco();
+                Tipostatus ti = new Tipostatus();
+                Cartaocredi cr = new Cartaocredi();
+                Statuspostagem pos = new Statuspostagem();
+           
+           
+          
+                for(ShoppingCartItem i : cart.items){
+            
+                
+                int idpedido = Integer.parseInt(idpe);                
+                pedid.setIdpedido(idpedido);
+                int idproduto = i.getProduto().getProid();
+                produto.setProid(idproduto);
+                ti.setIdtipostatus(idstatus);
+                double preco = i.getProduto().getPropreco();
+                int quant = i.getQuantity();
+                Double vlrt = i.getTotal();            
+                pos.setIdpostagem(1);
+            
+            
+                pedido.setIdped(pedid);
+                pedido.setIdpro(produto);
+                pedido.setIdstatus(ti);
+                pedido.setValoritem(preco);
+                pedido.setQuantidade(quant);
+                pedido.setValortotalitem(vlrt);
+                pedido.setIdstatusposta(pos);
+            
+                try {
+                    itDao.persist(pedido);
+                    //userPath="/paginaHistoricoPedido";
+                } catch (Exception ex) {
+                    Logger.getLogger(ControleServlet.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
+                //---------------------
+                
+                Produto proli = null;
+                try {
+                    proli = (Produto) prodDao.getObjectById(idproduto);
+                } catch (Exception ex) {
+                    Logger.getLogger(ControleServlet.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+                int aux = proli.getProqtda() - quant;
+                proli.setProid(idproduto);
+                proli.setPronome(proli.getPronome());
+                proli.setProaltura(proli.getProaltura());
+                proli.setProcompri(proli.getProcompri());
+                proli.setProdescr(proli.getProdescr());
+                proli.setProidcategoria(proli.getProidcategoria());
+                proli.setProlargura(proli.getProlargura());
+                proli.setPropeso(proli.getPropeso());
+                proli.setPropreco(proli.getPropreco());
+                proli.setProqtda(aux);
+
+                try {
+                    prodDao.merge(proli);
+                } catch (Exception ex) {
+                    Logger.getLogger(ControleServlet.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+                //---------------------
+            
+            } // fechamento for
+            
+            } // fechamento if condição id pedido
+            else {
+                request.setAttribute("msgerrop", "Não foi possível adicionar seu pedido");
+            
+            }
+           
+            String clear = request.getParameter("idpedido");
+            
+            /*if (clear != null){
+                ShoppingCart carta = (ShoppingCart) session.getAttribute("cart");
+                carta.clear();
+            }*/
+            
+            request.setAttribute("idpedido", clear);
+            userPath = "/paginaFinalizaDois";
+            //response.sendRedirect("/loja/paginaHistoricoPedido?idcl=" + clid);
+            
+        }
+          
+ //---------------------------------------------------------------------------------------------------------
+        
+        else if (userPath.equals("/addItem"))
+        {
+            
+            String clear = request.getParameter("idpedido");
+            
+            
+            if (clear != null){
+                ShoppingCart carta = (ShoppingCart) session.getAttribute("cart");
+                carta.clear();
+            }
+            userPath = "/paginaAgradecimento";
+        }
+//---------------------------------------------------------------------------------------------------------
+        
+         else if (userPath.equals("/detalheItemPedido")){
+            
+           String iditempedido = request.getParameter("itempedidoid");
+            String idproduto = request.getParameter("idpro");
+            String idpedido = request.getParameter("idped");
+            String idstatus = request.getParameter("tipostatus");
+            String idpostagem = request.getParameter("idpostagem");
+            String valoritem = request.getParameter("valoritem");
+            String quantidade = request.getParameter("quantidade");
+            String valortotal = request.getParameter("valortotalitem");
+            String justifica = request.getParameter("justifica");
+            
+            Itempedido itemped = new Itempedido();
+           
+            
+            if(iditempedido != null && !iditempedido.equals(" ")) 
+            {
+                
+                int idped = Integer.parseInt(iditempedido);
+                double valitem = Double.parseDouble(valoritem);
+                int qtda = Integer.parseInt(quantidade);
+                double valtot = Double.parseDouble(valortotal);
+                int idpro = Integer.parseInt(idproduto);
+                int idpe = Integer.parseInt(idpedido);
+                int idsta = Integer.parseInt(idstatus);
+                
+                
+                
+                Produto pro = new Produto();
+                pro.setProid(idpro);
+                Pedido ped = new Pedido();
+                ped.setIdpedido(idpe);
+                Tipostatus sta = new Tipostatus();
+                sta.setIdtipostatus(idsta);
+                Statuspostagem pos = new Statuspostagem();
+                pos.setIdpostagem(Integer.parseInt(idpostagem));
+                
+                itemped.setItempedidoid(idped);
+                itemped.setValoritem(valitem);
+                itemped.setQuantidade(qtda);
+                itemped.setValortotalitem(valtot);
+                itemped.setIdpro(pro);
+                itemped.setIdped(ped);
+                itemped.setIdstatus(sta);
+                itemped.setIdstatusposta(pos);
+                itemped.setObservatroca(justifica);
+                
+                
+                try {
+                    itDao.merge(itemped);
+                    userPath = "/detalheItemPedido";
+                } catch (Exception ex) {
+                    Logger.getLogger(ControleServlet.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
+            
+            }
+            
+            userPath = "/detalhePedido";
+           
         }
 //---------------------------------------------------------------------------------------------------------
 // -----------------------------------------------------------------------------------------------            

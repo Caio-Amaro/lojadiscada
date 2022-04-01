@@ -12,6 +12,7 @@ public class controleCupom {
     public double somaCupomTroca;    
     public String mensagemCupom;
     double calculoTotalCupom;
+    private double valorApenasCupom;
     @EJB
     private CupomDao cupDao;
     
@@ -39,8 +40,15 @@ public class controleCupom {
    
     double aux = somaCompra * (desconto/100);    
     this.calculoTotalCupom = somaCompra - aux;
+    this.valorApenasCupom = this.calculoTotalCupom;
     this.calculoTotalCupom = this.calculoTotalCupom - somaTroca;
-   
+    
    return this.calculoTotalCupom;
    }
+
+    public double getValorApenasCupom() {
+        return valorApenasCupom;
+    }
+   
+   
 }

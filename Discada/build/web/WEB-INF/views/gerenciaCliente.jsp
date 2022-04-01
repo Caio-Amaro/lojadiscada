@@ -54,7 +54,10 @@
                             <i style="font-size: 2.5em; margin-left: 45%;" class="bi bi-receipt"></i> 
                             <h5 class="card-title" style="text-align: center; margin-top: .5em;">HISTÓRICO DE PEDIDOS</h5>
                             <p class="card-text" style="text-align: center;">Aqui você acompanha o histórico completo das suas compras</p>
-                            <a href="/Discada/paginaHistoricoPedido" class="btn btn-outline-info">Visitar</a>                        
+                            <form action="${pageContext.request.contextPath}/paginaHistoricoPedido" method="GET">                        
+                                <input type="hidden" value="${cliente.cliid}" name="idcl">
+                                <button style="margin-bottom: -1em;" type="submit" class="btn btn-outline-info">Visitar</button>
+                            </form>                        
                         </div>
                     </div>
                 </div>
