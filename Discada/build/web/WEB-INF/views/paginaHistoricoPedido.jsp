@@ -76,7 +76,8 @@
                         <td>${ped.idendereco.getEndcep()}</td>
                         <td>${ped.idpedido}</td>
                         <td>
-                            <form action="${pageContext.request.contextPath}/detalhePedido" method="GET">
+                            
+                            <form action="${pageContext.request.contextPath}/detalhePedido" method="POST">
                                 <input type="hidden" name="idpedi" value="${ped.idpedido}">
                                 <button class="btn btn-outline-info" type="submit">ITENS DO PEDIDO</button>
                             </form>                      

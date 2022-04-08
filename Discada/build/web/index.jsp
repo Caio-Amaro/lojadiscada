@@ -37,11 +37,11 @@
                 
                     <c:forEach var="produ" items="${produtos}" >
                         <c:choose>
-                            <c:when test="${obj.proativo != 1}"> <!-- para produtos ativos -->
+                            <c:when test="${produ.proativo == 1}"> <!-- para produtos ativos -->
                                 <div class="col mb-4" >
                         <!-- Imagem do produto-->
                                 <div class="card h-100" style="border-radius: 20px;">
-                                    <img class="card-img-top" style="object-fit: contain;max-height: 178px;" src="${initParam.produtosImagemPath}${produ.pronome }.jpg" alt="${produ.pronome}"/>
+                                    <img class="card-img-top" style="object-fit: contain;max-height: 178px;" src="${initParam.produtosImagemPath}${produ.pronome }.jpg"/> 
 
                                     <!-- Product details-->
                                     <div class="card-body p-4">

@@ -67,11 +67,34 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>                    
+                        </div>
+                        <div class="col-12 col-md-4">
+                            <c:choose>
+                                <c:when test="${enviacupom != 1}">
+                                    <h6 id="sloganUm"> ESCOLHA O ENDEREÇO ABAIXO SE PAGAMENTO FOR SÓ COM CUPOM! </h6>
+                                    <select name="envio" class="form-select" multiple aria-label="multiple select example">                            
+                                        <c:forEach var="en" items="${end}">
+                                            <option required value="${en.endid}"> ${en.endnomedestino} : CEP ${en.endcep}</option>
+                                        </c:forEach> 
+                                    </select>
+                                </c:when>
+                            </c:choose>
+                                <%--<h6 id="sloganUm"> ESCOLHA O ENDEREÇO ABAIXO SE PAGAMENTO FOR SÓ COM CUPOM! </h6>
+                                <select name="envio" class="form-select" multiple aria-label="multiple select example">                            
+                                    <c:forEach var="en" items="${end}">
+                                        <option required value="${en.endid}"> ${en.endnomedestino} : CEP ${en.endcep}</option>
+                                    </c:forEach> 
+
+                                </select>--%>
+                        </div>                        
+
                     </div>
                 <input type="hidden" name="valorcompra" value="${cart.subtotal}">
                 <input type="hidden" name="enviacupom" value="1">
                 <input type="hidden" name="idcl" value="${cliente.cliid}">
+                <input name="vlrtotalpedido" value="${cart.subtotal}" type="hidden">
+                
+                
                 
                 <c:choose>
                     <c:when test="${enviacupom != 1}">
@@ -85,6 +108,7 @@
                     </c:otherwise>
                 </c:choose>
                 </div>
+              
                 
             </form>
             <%--<p>${MSG10}</p> <p>${cup.valorcupom}</p> TRATAR ESSA MENSAGEM --%>
@@ -96,13 +120,23 @@
                     <form action="${pageContext.request.contextPath}/cupomTroca" method="POST">
                         <div class="row">
                             <div class="col-12 col-md-4">                            
-                                <h6 id="sloganUm"> ESCOLHA SEU ENDEREÇO DE ENVIO ABAIXO OU <a href="/Discada/paginaEndereco" type="button" class="btn btn-outline-dark"><i class="bi bi-house-door"></i> Cadastrar Novo Endereço</a></h6>
+                                <c:choose>
+                                    <c:when test="${enviacupom == 1}">
+                                        <h6 id="sloganUm"> ESCOLHA O ENDEREÇO ABAIXO SE PAGAMENTO FOR SÓ COM CUPOM! </h6>
+                                        <select name="envio" class="form-select" multiple aria-label="multiple select example">                            
+                                            <c:forEach var="en" items="${end}">
+                                                <option required value="${en.endid}"> ${en.endnomedestino} : CEP ${en.endcep}</option>
+                                            </c:forEach> 
+                                        </select>
+                                    </c:when>
+                                </c:choose>
+                                <%--<h6 id="sloganUm"> ESCOLHA SEU ENDEREÇO DE ENVIO ABAIXO OU <a href="/Discada/paginaEndereco" type="button" class="btn btn-outline-dark"><i class="bi bi-house-door"></i> Cadastrar Novo Endereço</a></h6>
                                 <select name="envio" class="form-select" multiple aria-label="multiple select example">                            
                                     <c:forEach var="en" items="${end}">
                                         <option required value="${en.endid}"> ${en.endnomedestino} : CEP ${en.endcep}</option>
                                     </c:forEach> 
 
-                                </select>
+                                </select>--%>
                             </div>                        
 
                             <div class="col-12 col-md-4">

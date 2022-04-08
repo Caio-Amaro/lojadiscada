@@ -11443,6 +11443,13 @@ body.sb-sidenav-toggled #wrapper #sidebar-wrapper {
 
   }
   
+  #campoPesquisa {
+      
+      padding: .5em; 
+      border-radius: 10px !important;
+      
+  }
+  
   
  
   

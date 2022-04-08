@@ -44,6 +44,8 @@ public class ItemPedidoDao<TIPO> extends DaoGenerico<Itempedido> implements Seri
         
     }
      
+   
+     
      // ----------------------------------------------------------------------------------------
      
       public List<Itempedido> listarPorDataCategoria(Date datainicio, Date datafim, int idpr)

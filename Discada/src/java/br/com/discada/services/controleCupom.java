@@ -15,6 +15,7 @@ public class controleCupom {
     private double valorApenasCupom;
     @EJB
     private CupomDao cupDao;
+    private int enderecoNum;
     
     public double somaCupomTroca (String[] cupons){
         
@@ -49,6 +50,16 @@ public class controleCupom {
     public double getValorApenasCupom() {
         return valorApenasCupom;
     }
+
+    public int getEnderecoNum() {
+        return enderecoNum;
+    }
+
+    public void setEnderecoNum(int enderecoNum) {
+        this.enderecoNum = enderecoNum;
+    }
+    
+    
    
    
 }

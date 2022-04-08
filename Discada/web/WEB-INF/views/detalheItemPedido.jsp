@@ -10,17 +10,17 @@
 <!DOCTYPE html>
 <body>               
     <!-- Page content-->
-    <div class="container-fluid" >        
-        <div style="margin-left:5em;">
+    <div class="container-fluid">        
+        <div style="margin-left:2.5em;">
             <h6 id="sloganUm"> Dados Gerais do Item Pedido </h6>
             <a style="margin-bottom: 1.5em;" href="#" class="btn btn-outline-info" type="button">Voltar aos Itens</a> 
 
-            <p class="mt-4" style="margin-bottom: 1.5em; font-family: arial; font-size: 17px;">Pedido número <strong>${iditem.idped.getIdpedido()}</strong> criado em <strong>${iditem.idped.getData()}</strong
+            <p class="mt-4" style="margin-bottom: 1.5em; font-family: arial; font-size: 17px;">Pedido número <strong>${iditem.idped.getIdpedido()}</strong> criado em <strong><fmt:formatDate value="${iditem.idped.getData()}" type="date"/></strong></p>
         </div>
         
-        <div>
+        <div style="margin-left:2.5em">
             <p style="font-family: arial; font-size: 17px;"><strong>Produto</strong>: ${iditem.idpro.getPronome()} | ${iditem.idpro.getProdescr()}</p>        
-            <p style="font-family: arial; font-size: 17px;"><strong>Preço:</strong> ${iditem.valoritem} | <strong>Quantidade:</strong> ${iditem.quantidade} unid. | <strong>Valor Total:</strong> R$${iditem.valortotalitem}</p>                
+            <p style="font-family: arial; font-size: 17px;"><strong>Preço:</strong> <fmt:formatNumber value="${iditem.valoritem}" type="currency"  /> | <strong>Quantidade:</strong> ${iditem.quantidade} unid. | <strong>Valor Total:</strong> <fmt:formatNumber value="${iditem.valortotalitem}" type="currency"  /></p>                
         </div>        
     </div>
     <hr>
@@ -30,8 +30,8 @@
             
             <div  class="col-sm-5">
                     
-                    <div class="justify-content-md-center">
-                        <img style="width:60%; margin-left: 3em; margin-bottom: 2em;" class="card-img-top mb-5 mb-md-0" src="${initParam.produtosImagemPath}${iditem.idpro.getPronome()}.jpg">
+                    <div class="justify-content-md-center" style="margin-left:2.5em">
+                        <img style="width:60%; margin-left: 5em; margin-bottom: 2em;" class="card-img-top mb-5 mb-md-0" src="${initParam.produtosImagemPath}${iditem.idpro.getPronome()}.jpg">
                     </div>
                   
             </div>  
@@ -86,7 +86,9 @@
                                     <div class="form-group">
                                         <div>
                                             <h6 id="sloganUm">JUSTIFIQUE O CANCELAMENTO</h6>
-                                            <textarea  style="width:99%;" rows="4" name="justifica"></textarea>
+                                            <p>Qual a quantidade que deseja trocar?</p>
+                                            <input style="width: 10%; text-align: center;" type="text" name="observatroca" value="${iditem.quantidade}">
+                                            <textarea  style="width:99%; margin-top: 1em;" rows="4" name="justifica"></textarea>
                                         </div>
                                         <input type="hidden" value="2" name="tipostatus">  
 
@@ -99,8 +101,10 @@
                                 <c:when test="${iditem.idstatusposta.getIdpostagem() == 4}"> 
                                     <div class="form-group">
                                         <div>
-                                            <h6 id="sloganUm">JUSTIFIQUE A TROCA</h6>
-                                            <textarea  style="width:60%;" rows="4" name="justifica"></textarea>
+                                            <h6 id="sloganUm">JUSTIFIQUE A TROCA - </h6>
+                                            <p>Qual a quantidade que deseja trocar?</p>
+                                            <input style="width: 10%; text-align: center;" type="text" name="observatroca" value="${iditem.quantidade}">
+                                            <textarea  style="width:99%; margin-top: 1em;" rows="4" name="justifica"></textarea>
                                         </div>
                                         <input type="hidden" value="5" name="tipostatus">   
                                         <button type="submit" class="btn btn-warning" style="margin-bottom: 1.5em; margin-top: 0.5em">
@@ -112,7 +116,7 @@
                             </c:choose>
                         </c:if>
                         <c:if test="${iditem.idstatus.getIdtipostatus() != 1}">
-                            <p>Esse item não está apto para solicitar troca ou cancelamento</p>  
+                            <p>Esse item não está apto para solicitar troca ou cancelamento ${qtdtroca}</p>  
                         </c:if> 
                     </form>                
                 </div>  

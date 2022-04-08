@@ -9,6 +9,10 @@
         <servlet-name>ControleServlet</servlet-name>
         <servlet-class>br.com.discada.controller.ControleServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ControleServletPainel</servlet-name>
+        <servlet-class>br.com.discada.controller.ControleServletPainel</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ControleServlet</servlet-name>
         <url-pattern>/addAcesso</url-pattern>
@@ -38,6 +42,36 @@
         <url-pattern>/paginaProduto</url-pattern>
         <url-pattern>/gerenciaCliente</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ControleServletPainel</servlet-name>
+        <url-pattern>/ControleServletPainel</url-pattern>
+        <url-pattern>/editarItemPedido</url-pattern>
+        <url-pattern>/error</url-pattern>
+        <url-pattern>/relatorioVendaProduto</url-pattern>
+        <url-pattern>/relatorioVendasGeral</url-pattern>
+        <url-pattern>/controlePedidos</url-pattern>
+        <url-pattern>/addPostagem</url-pattern>
+        <url-pattern>/loginAdm</url-pattern>
+        <url-pattern>/pesquisaVendas</url-pattern>
+        <url-pattern>/listarCupom</url-pattern>
+        <url-pattern>/controleClientes</url-pattern>
+        <url-pattern>/relatorioVendaCategoria</url-pattern>
+        <url-pattern>/Painel</url-pattern>
+        <url-pattern>/relatorioVendaData</url-pattern>
+        <url-pattern>/pesquisaVendasMes</url-pattern>
+        <url-pattern>/adicionarCupomTroca</url-pattern>
+        <url-pattern>/editarCupom</url-pattern>
+        <url-pattern>/adicionarCupomPromo</url-pattern>
+        <url-pattern>/adicionarProduto</url-pattern>
+        <url-pattern>/adicionarCategoria</url-pattern>
+        <url-pattern>/consultaNomeProduto</url-pattern>
+        <url-pattern>/editarCategoria</url-pattern>
+        <url-pattern>/editarProduto</url-pattern>
+        <url-pattern>/processaBusca</url-pattern>
+        <url-pattern>/consultaNomeCliente</url-pattern>
+        <url-pattern>/detalheClientes</url-pattern>
+        <url-pattern>/controleEstoque</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             10
@@ -51,11 +85,12 @@
             <include-prelude>/WEB-INF/jspf/header.jspf</include-prelude>
             <include-coda>/WEB-INF/jspf/footer.jspf</include-coda>
         </jsp-property-group>
+        <jsp-property-group>
+            <description>cabeça </description>
+            <url-pattern>/Discada/loginAdm.jsp</url-pattern>
+            <url-pattern>/WEB-INF/viewsPainel/*</url-pattern>
+            <include-prelude>/WEB-INF/jspf/headerPanel.jspf</include-prelude>
+            <include-coda>/WEB-INF/jspf/footerPanel.jspf</include-coda>
+        </jsp-property-group>
     </jsp-config>
-    <!-- <resource-ref>
-        <res-ref-name>jdbc/discada</res-ref-name>
-        <res-type>javax.sql.ConnectionPoolDataSource</res-type>
-        <res-auth>Container</res-auth>
-        <res-sharing-scope>Shareable</res-sharing-scope>
-    </resource-ref> -->
 </web-app>

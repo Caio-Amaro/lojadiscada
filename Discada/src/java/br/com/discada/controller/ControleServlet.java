@@ -274,7 +274,7 @@ public class ControleServlet extends HttpServlet {
           
         }
 //---------------------------------------------------------------------------------------------------------
-          else if(userPath.equals("/detalhePedido"))
+          /*else if(userPath.equals("/detalhePedido"))
          {
          
             String idpe = request.getParameter("idpedi");
@@ -283,7 +283,7 @@ public class ControleServlet extends HttpServlet {
             request.setAttribute("item", en);
             request.getAttribute("item"); 
          
-         }
+         }*/
          
 //---------------------------------------------------------------------------------------------------------
         
@@ -504,44 +504,7 @@ public class ControleServlet extends HttpServlet {
                     + "Certifique-se dos dados e tente novamente");
                     userPath = "/cadastroP2";
                 }
-                
-               
-            /*servicoValida recebe = new servicoValida();
-        
-            String log = request.getParameter("login");
-            String sen = request.getParameter("senha");
-            String idsegredo = request.getParameter("idsegredo"); 
-
-            List <Segredo> segr; 
-            segr = (List<Segredo>) segDao.buscaUsuario(log, sen);
-            
-            int idcliente = recebe.validaAcesso(log, sen, segr);
-            
-            if (idcliente != 0) {
-                try {
-                    Clientes cli = (Clientes) clieDao.getObjectById(idcliente); 
-                    session.setAttribute("cliente", cli);
-                    session.getAttribute("cliente");
-                    segDao.setAcesso(true); 
-                }   catch (Exception ex) {
-                        Logger.getLogger(ControleServlet.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                
-                Segredo seg = new Segredo();                
-                request.getSession().setAttribute("usuario", seg);
-                session.setAttribute("se", seg);
-                session.getAttribute("cliente");                
-                request.setAttribute("msgbem", "Bem vindo!");
-                userPath = "/gerenciaCliente";
-                
-            } else {userPath = "/cadastroP2";
-                    request.setAttribute("msg", "Informe login e senha corretamente");}
-           
-            if (segDao.isAcesso() == false) {
-                request.setAttribute("errologin", "o login e ou a senha não conferem. "
-                + "Certifique-se dos dados e tente novamente");
-                userPath = "/cadastroP2";
-            }  */             
+                             
         }
 
 // ------------------------------------------------------------------------------------
@@ -1046,6 +1009,12 @@ public class ControleServlet extends HttpServlet {
             // Recebendo valor da compra
             String valorcompra = request.getParameter("valorcompra");
             
+            String idendereco = request.getParameter("envio");
+            String idpagamento = request.getParameter("cartao");            
+            String vlrtotalpedido = request.getParameter("vlrtotalpedido");
+            
+            double vltotal = Double.parseDouble(vlrtotalpedido);
+            
             if (enviacupom != null || !enviacupom.equals(" ")){
             
             //Chamando o método para somar os valores dos cupons de troca
@@ -1114,7 +1083,7 @@ public class ControleServlet extends HttpServlet {
                     
                     double novovalorcupom = ((vlrFinalCupom < 0) ? -vlrFinalCupom : vlrFinalCupom);
                     
-                    String nomeCupom = "dif_troca - " + idclien;
+                    String nomeCupom = "DIF_Troca : " + idclien;
                     
                     
                     
@@ -1134,6 +1103,42 @@ public class ControleServlet extends HttpServlet {
                         cupDao.persist(cup);
                     } catch (Exception ex) {
                         Logger.getLogger(ControleServlet.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    
+                    Pedido pedid = new Pedido();
+                    Clientes cli = new Clientes();
+                    Endereco en = new Endereco();
+                    Tipostatus ti = new Tipostatus();
+                    //Cartaocredi cr = new Cartaocredi();
+                    
+                    // data atual
+                    Calendar cal = new GregorianCalendar();
+                    
+                    // -----
+                    int idc = Integer.parseInt(idcliente);
+                    int idstatus = 1;
+                    // injetando o id das classes associadas
+                    cli.setCliid(idc);
+                    en.setEndid(Integer.parseInt(idendereco));
+                    ti.setIdtipostatus(idstatus);
+                    //cr.setCreid(Integer.parseInt(idpagamento));
+                   
+                    
+                    pedid.setIdcliente(cli);
+                    pedid.setIdendereco(en);
+                    pedid.setIdtipostatus(ti);
+                    pedid.setValortotal(vltotal);
+                    pedid.setData(cal.getTime());
+                    pedid.setFormapag(2);
+                    
+                    try {
+                    pDao.persist(pedid);
+                    //request.setAttribute("msgped", "Pedido Solicitado com Sucesso");                
+                    session.getAttribute("pedido");
+                    session.setAttribute("pedido", pedid);
+                    
+                    }   catch (Exception ex) {                        
+                            Logger.getLogger(ControleServlet.class.getName()).log(Level.SEVERE, null, ex);
                         }
                   
                 }
@@ -1284,8 +1289,16 @@ public class ControleServlet extends HttpServlet {
             String quantidade = request.getParameter("quantidade");
             String valortotal = request.getParameter("valortotalitem");
             String justifica = request.getParameter("justifica");
+            String qtdtroca = request.getParameter("observatroca");
             
             Itempedido itemped = new Itempedido();
+            
+            
+            
+            session.setAttribute("qtdtroca", qtdtroca);
+            session.getAttribute("qtdtroca");
+            
+            
            
             
             if(iditempedido != null && !iditempedido.equals(" ")) 
@@ -1300,6 +1313,8 @@ public class ControleServlet extends HttpServlet {
                 int idsta = Integer.parseInt(idstatus);
                 
                 
+                int qtdtro = Integer.parseInt(qtdtroca);               
+                
                 
                 Produto pro = new Produto();
                 pro.setProid(idpro);
@@ -1310,6 +1325,7 @@ public class ControleServlet extends HttpServlet {
                 Statuspostagem pos = new Statuspostagem();
                 pos.setIdpostagem(Integer.parseInt(idpostagem));
                 
+                
                 itemped.setItempedidoid(idped);
                 itemped.setValoritem(valitem);
                 itemped.setQuantidade(qtda);
@@ -1319,11 +1335,15 @@ public class ControleServlet extends HttpServlet {
                 itemped.setIdstatus(sta);
                 itemped.setIdstatusposta(pos);
                 itemped.setObservatroca(justifica);
+                itemped.setQtdtroca(qtdtro);
+                
                 
                 
                 try {
                     itDao.merge(itemped);
-                    userPath = "/detalheItemPedido";
+                    //userPath = "/detalheItemPedido";
+                    //int idped = Integer.parseInt(iditempedido);
+                    response.sendRedirect("/Discada/gerenciaCliente");
                 } catch (Exception ex) {
                     Logger.getLogger(ControleServlet.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -1331,9 +1351,21 @@ public class ControleServlet extends HttpServlet {
             
             }
             
-            userPath = "/detalhePedido";
+            //userPath = "/detalhePedido";
            
         }
+//---------------------------------------------------------------------------------------------------------
+          
+    else if(userPath.equals("/detalhePedido"))
+         {
+         
+            String idpe = request.getParameter("idpedi");
+            List<Itempedido> pedit;
+            pedit = (List<Itempedido>) itDao.listarItemPedido(Integer.parseInt(idpe));
+            request.setAttribute("pedit", pedit);
+            request.getAttribute("pedit"); 
+         
+         }
 //---------------------------------------------------------------------------------------------------------
 // -----------------------------------------------------------------------------------------------            
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

@@ -34,7 +34,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "Itempedido.findByValoritem", query = "SELECT i FROM Itempedido i WHERE i.valoritem = :valoritem")
     , @NamedQuery(name = "Itempedido.findByQuantidade", query = "SELECT i FROM Itempedido i WHERE i.quantidade = :quantidade")
     , @NamedQuery(name = "Itempedido.findByValortotalitem", query = "SELECT i FROM Itempedido i WHERE i.valortotalitem = :valortotalitem")
-    , @NamedQuery(name = "Itempedido.findByObservatroca", query = "SELECT i FROM Itempedido i WHERE i.observatroca = :observatroca")})
+    , @NamedQuery(name = "Itempedido.findByObservatroca", query = "SELECT i FROM Itempedido i WHERE i.observatroca = :observatroca")
+    , @NamedQuery(name = "Itempedido.findByQtdtroca", query = "SELECT i FROM Itempedido i WHERE i.qtdtroca = :qtdtroca")})
 public class Itempedido implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -58,6 +59,8 @@ public class Itempedido implements Serializable {
     @Size(max = 450)
     @Column(name = "observatroca")
     private String observatroca;
+    @Column(name = "qtdtroca")
+    private Integer qtdtroca;
     @JoinColumn(name = "idpro", referencedColumnName = "proid")
     @ManyToOne(optional = false)
     private Produto idpro;
@@ -123,6 +126,14 @@ public class Itempedido implements Serializable {
 
     public void setObservatroca(String observatroca) {
         this.observatroca = observatroca;
+    }
+
+    public Integer getQtdtroca() {
+        return qtdtroca;
+    }
+
+    public void setQtdtroca(Integer qtdtroca) {
+        this.qtdtroca = qtdtroca;
     }
 
     public Produto getIdpro() {

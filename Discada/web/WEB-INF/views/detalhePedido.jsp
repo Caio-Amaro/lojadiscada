@@ -28,12 +28,12 @@
                     <th scope="col">Data Pedido</th>
                     <th scope="col">Total Sem Desconto</th>
                     <th scope="col">Status Negociação</th>
-                    <th scope="col">Item Pedido</th>
+                    <th scope="col">Item PEPEPE</th>
                     
            
                 </tr>
             
-                <c:forEach var="obj" items="${item}">
+                <c:forEach var="obj" items="${pedit}">
                     <tr>
                         <th scope="row">${obj.itempedidoid}</th>
                         <td>${obj.idpro.getPronome()}</td>

@@ -24,8 +24,9 @@
                  </c:choose> --%>
 
                  <div class="row gx-4 gx-lg-5 align-items-center">
-                     <div class="col-md-6"><img class="card-img-top mb-5 mb-md-0" src="${initParam.produtosImagemPath}${selecioneProd.pronome}.jpg"
-                                                alt="${selecioneProd.pronome} ${client.clinome}" /></div>                                 
+                     <div class="col-md-6">
+                         <img class="card-img-top mb-5 mb-md-0" src="${initParam.produtosImagemPath}${selecioneProd.pronome}.jpg">
+                     </div>                                 
                      <div class="col-md-6">                   
 
 
