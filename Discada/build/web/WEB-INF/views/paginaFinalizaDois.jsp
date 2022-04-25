@@ -24,11 +24,11 @@
                         <c:forEach var="obl" items="${cart.items}">
                                 <c:set var="produto" value="${obl.produto}"/>
                                 <input type="hidden" name="idproduto" value="${produto.proid}">
-                                <h5>TÍTULO : ${produto.pronome}</h5>
+                                <h6 style="font-family:monospace;">${produto.pronome}</h6>
                                 <img style="width:10%; height: auto;" src="${initParam.produtosImagemPath}${produto.pronome}.jpg">
-                                <p style="font-family:sans-serif;">VALOR: <strong><fmt:formatNumber value="${produto.propreco}" type="currency"  /></strong></p>
-                                <p style="font-family:sans-serif;">QUANTIDADE: ${obl.quantity} (unid.)</p>
-                                <p style="font-family:sans-serif;">SUBTOTAL: <strong><fmt:formatNumber value="${obl.quantity * produto.propreco}" type="currency"  /></strong> </p>
+                                <p style="font-family:monospace; font-size: 16px;">VALOR: <strong><fmt:formatNumber value="${produto.propreco}" type="currency"  /></strong></p>
+                                <p style="font-family:monospace; font-size: 16px;">QUANTIDADE: ${obl.quantity} (unid.)</p>
+                                <p style="font-family:monospace; font-size: 16px;">SUBTOTAL: <strong><fmt:formatNumber value="${obl.quantity * produto.propreco}" type="currency"  /></strong> </p>
                                 <hr>
                         </c:forEach>                            
                             <h5 id="sloganUm">VALOR FINAL PAGO <strong><fmt:formatNumber value="${cart.subtotal}" type="currency"  /></strong></h5>
