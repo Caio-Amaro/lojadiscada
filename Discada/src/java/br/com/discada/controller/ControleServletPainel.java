@@ -46,7 +46,7 @@ import javax.servlet.http.HttpSession;
                    "/controlePedidos", "/editarCategoria", "/adicionarCupomProm", "/consultaNomeProduto",
                    "/detalheClientes", "/editarProduto", "/adicionarCupomTroca", "/pesquisaVendasMes",
                    "/relatorioVendaCategoria", "/adicionarCategoria", "/editarItemPedido",
-                   "/controleClientes", "/controleEstoque", "/adicionarProduto",
+                   "/controleClientes", "/controleEstoque", "/adicionarProduto", "/pesquisaVendasBean",
                    "/Painel", "/loginAdm", "/addPostagem", "/pesquisaVendas"})
 
         
@@ -1061,10 +1061,9 @@ private AcessoDao acDao;*/
         
         else if (userPath.equals("/pesquisaVendasMes")){
             
-           // String prod = request.getParameter("prod");
+          
            SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
-           ;
-           
+                     
            String dataInicio = request.getParameter("datainicial");
            String dataFim = request.getParameter("datafinal");
            int dife = 0;
@@ -1077,6 +1076,7 @@ private AcessoDao acDao;*/
                 //int dias = Days.daysBetween(dataInicio, dataFim).getDays();
                 Date firstDt = formato.parse(dataInicio);
                 Date finalDt = formato.parse(dataFim);
+                
                 long difer  = Math.abs(finalDt.getTime() - firstDt.getTime());
                 
                 
@@ -1089,76 +1089,119 @@ private AcessoDao acDao;*/
             } catch (ParseException ex) {
                 Logger.getLogger(ControleServletPainel.class.getName()).log(Level.SEVERE, null, ex);
             }
-                Date firstD;
-                Date finalD2;
+                
+                
                 List testelista = new ArrayList<>();
+                List testelista2 = new ArrayList<>();
                 int soma = 0;
                 
             try {
+                Date firstD;
+                Date finalD2;
                 firstD = formato.parse(dataInicio);
                 finalD2 = formato.parse(dataFim);
-                Date fdate = null;
-                Calendar cal = Calendar.getInstance();
                 
-                for (int i = 0; i < 1; i++ ) {
+                
+                Calendar cal = Calendar.getInstance();
+                Calendar calFinal = Calendar.getInstance();
+                
+                for (int i = 0; i <= dife; i++ ) {
                     
-                    if(i == 0) {
-                        fdate = finalD2;
-                        }
-                        else {
-                        cal.setTime(fdate);
-                        cal.add(Calendar.DATE, 1);
+                                                
+                        finalD2 = firstD;
+                        
+                        cal.setTime(firstD);
+                        //String datafor = formato.format(calFinal.getTime());
+                         
+                        
+                        cal.add(Calendar.DAY_OF_MONTH, i);
+                        
+                        
+                        calFinal.setTime(finalD2);
+                        calFinal.add(Calendar.DAY_OF_MONTH, i+1);
+                        String datafor = formato.format(cal.getTime());
+                        testelista2.add(datafor);
                         List<Itempedido> Ittt = null;
-                        Ittt = (List<Itempedido>) itemDao.listarPorDataCategoria(firstD, fdate, 1);
-
+                        Ittt = (List<Itempedido>) itemDao.listarPorDataCategoria(cal.getTime(), calFinal.getTime(), 1);
+                        
                             for(Itempedido tet : Ittt) {
 
-                                soma = soma + tet.getQuantidade();
-
+                                soma = soma + tet.getQuantidade();                        
                             }
+                        
+                        String datafor2 = formato.format(calFinal.getTime());
+                        
+                        
+                        //testelista2.add(datafor2);
+                        testelista2.add(soma);
+                        
                         testelista.add(soma);
                         
-                    }
+                        firstD = finalD2;
+                        soma = 0;
+                        
+                  //  }
                 }
                 
                 request.setAttribute("tes", testelista);
                 request.getAttribute("tes"); 
+                
+                request.setAttribute("tesd", testelista2);
+                request.getAttribute("tesd"); 
+            
             
             } catch (ParseException ex) {
                 Logger.getLogger(ControleServletPainel.class.getName()).log(Level.SEVERE, null, ex);
             }
-                
-            
-            
-            //ItemPedidoDao itema = new ItemPedidoDao();
-           
-           /*String dateteste1 = "31/03/2022";
-           String dateteste2 = "04/04/2022";*/
+          
+        } 
+        
+ // ------------------------------------------------------------------
+        
+        else if (userPath.equals ("/pesquisaVendasBean")){
             
           
-           
-           
+           SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+                     
+           String dataInicio = request.getParameter("datainicial");
+           String dataFim = request.getParameter("datafinal");
            
             try {
-            firstD = formato.parse(dataInicio);
-            finalD2 = formato.parse(dataFim);
-            
-            List<Itempedido> Ittt = null;
-            Ittt = (List<Itempedido>) itemDao.listarPorDataCategoria(firstD, finalD2, 1);            
-            request.setAttribute("testeei", Ittt);
-            request.getAttribute("testeei");
-            /*Gson gson = new Gson();
-            gson.toJson(Ittt);*/
-           
+                //int dias = Days.daysBetween(dataInicio, dataFim).getDays();
+                Date firstDt = formato.parse(dataInicio);
+                Date finalDt = formato.parse(dataFim);
+                
+                MontaGrafico tett = new MontaGrafico();
+               
+                                
+                tett = (MontaGrafico) itemDao.listarPorDataProduto(firstDt, finalDt, 1);                                               
+                request.setAttribute("prodOne", tett.getSomqtd());
+                request.getAttribute("prodOne");
+                request.setAttribute("prodOneUm", tett.getNomepr());
+                request.getAttribute("prodOneUm");
+                request.setAttribute("prodOneDois", tett.getSomvlr());
+                request.getAttribute("prodOneDois");
+                
+                tett = (MontaGrafico) itemDao.listarPorDataProduto(firstDt, finalDt, 2);                                               
+                request.setAttribute("prodTw", tett.getSomqtd());
+                request.getAttribute("prodTw");
+                request.setAttribute("prodTwOne", tett.getNomepr());
+                request.getAttribute("prodTwOne");
+                request.setAttribute("prodTwDois", tett.getSomvlr());
+                request.getAttribute("prodTwDois");
+                
+                
             } catch (ParseException ex) {
                 Logger.getLogger(ControleServletPainel.class.getName()).log(Level.SEVERE, null, ex);
             }
-          
-           
+              
                
-           //' PARAMOS AQUI 
+             userPath = "/pesquisaVendasMes";   
             
-        }  
+          
+        } 
+               
+        
         
         
  // --------------------------------------------------------------------------//

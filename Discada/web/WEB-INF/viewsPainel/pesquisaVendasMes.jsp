@@ -10,7 +10,7 @@
 
 <div class="container-fluid">
     <hr>
-    <form action="${pageContext.request.contextPath}/pesquisaVendasMes" method="POST">
+    <form action="${pageContext.request.contextPath}/pesquisaVendasBean" method="POST">
         <div class="col-6" style="margin-top: .5em; margin-bottom: 1em;">
             <label>ESCOLHA O PRODUTO PARA ANÁLISE ANUAL DE PROGRESSÃO</label>
             
@@ -36,13 +36,28 @@
         <hr>
         <hr>  <%-- transform: rotateX(180deg); --%>
   <h3>Gráfico de Progressão de Vendas</h3>
-  <h1>Teste ${dtini}</h1>
-  <h1>Teste Dois ${testee}</h1>
-  <h1>Teste Dtrês ${testeei}</h1>
-  <c:forEach var="tey" items="${tes}">
-      <p>tetetete : ${tey}</p>
-      
+  
+  <c:forEach var="tey" items="${prodOne}">
+      <p>te : ${tey}</p>      
   </c:forEach>
+  <c:forEach var="tey1" items="${prodOneUm}">
+      <p>te : ${tey1}</p>      
+  </c:forEach>
+  <c:forEach var="tey2" items="${prodOneDois}">
+      <p>te : ${tey2}</p>      
+  </c:forEach>
+      
+  <c:forEach var="te" items="${prodTw}">
+      <p>te : ${te}</p>      
+  </c:forEach>
+  <c:forEach var="te1" items="${prodTwOne}">
+      <p>te : ${te1}</p>      
+  </c:forEach>
+  <c:forEach var="te2" items="${prodTwDois}">
+      <p>te : ${te2}</p>      
+  </c:forEach>    
+      
+      
 <div style="margin-top: 3em; margin-bottom: 10em;" class="row">
    
     

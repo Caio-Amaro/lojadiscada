@@ -44,14 +44,7 @@ public class ItemPedidoDao<TIPO> extends DaoGenerico<Itempedido> implements Seri
         
     }
      
-public int MetodoFazerFat(int y) {
-    
-    if (y == 0) // Se y for igual a 0 (zero) então retorna 1.
-      return 1;
-    
-    return y * MetodoFazerFat(y - 1);
-   
-     
+
      // ----------------------------------------------------------------------------------------
      
       public List<Itempedido> listarPorDataCategoria(Date datainicio, Date datafim, int idpr)
@@ -162,8 +155,7 @@ public int MetodoFazerFat(int y) {
         montar.setSomvlr(somvlr);
         montar.setNomepr(nomepr);
         
-        return montar;
-        
+        return montar;       
        
     }
 

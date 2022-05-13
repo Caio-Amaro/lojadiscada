@@ -44,12 +44,12 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ControleServletPainel</servlet-name>
-        <url-pattern>/ControleServletPainel</url-pattern>
         <url-pattern>/editarItemPedido</url-pattern>
         <url-pattern>/error</url-pattern>
         <url-pattern>/relatorioVendaProduto</url-pattern>
         <url-pattern>/relatorioVendasGeral</url-pattern>
         <url-pattern>/controlePedidos</url-pattern>
+        <url-pattern>/pesquisaVendasBean</url-pattern>
         <url-pattern>/addPostagem</url-pattern>
         <url-pattern>/loginAdm</url-pattern>
         <url-pattern>/pesquisaVendas</url-pattern>
@@ -68,6 +68,7 @@
         <url-pattern>/editarCategoria</url-pattern>
         <url-pattern>/editarProduto</url-pattern>
         <url-pattern>/processaBusca</url-pattern>
+        <url-pattern>/ControleServletPainel</url-pattern>
         <url-pattern>/consultaNomeCliente</url-pattern>
         <url-pattern>/detalheClientes</url-pattern>
         <url-pattern>/controleEstoque</url-pattern>
