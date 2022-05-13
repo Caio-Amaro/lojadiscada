@@ -18,11 +18,17 @@ import br.com.discada.model.jpa.Pedido;
 import br.com.discada.model.jpa.Produto;
 import br.com.discada.model.jpa.Statuspostagem;
 import br.com.discada.model.jpa.Tipostatus;
+import br.com.discada.services.MontaGrafico;
 import br.com.discada.services.controleCupom;
+import com.google.gson.Gson;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
@@ -1050,6 +1056,109 @@ private AcessoDao acDao;*/
             request.getAttribute("novoitem");
             } 
         }
+        
+// ------------------------------------------------------------------
+        
+        else if (userPath.equals("/pesquisaVendasMes")){
+            
+           // String prod = request.getParameter("prod");
+           SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+           ;
+           
+           String dataInicio = request.getParameter("datainicial");
+           String dataFim = request.getParameter("datafinal");
+           int dife = 0;
+           
+           Date teste = new Date();
+           //ArrayList teste = new ArrayList<>();
+           
+           
+            try {
+                //int dias = Days.daysBetween(dataInicio, dataFim).getDays();
+                Date firstDt = formato.parse(dataInicio);
+                Date finalDt = formato.parse(dataFim);
+                long difer  = Math.abs(finalDt.getTime() - firstDt.getTime());
+                
+                
+                long differTw = TimeUnit.DAYS.convert(difer, TimeUnit.MILLISECONDS);
+                dife = (int)differTw;
+                request.setAttribute("dtini", dife);
+                request.getAttribute("dtini");
+                
+                
+            } catch (ParseException ex) {
+                Logger.getLogger(ControleServletPainel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+                Date firstD;
+                Date finalD2;
+                List testelista = new ArrayList<>();
+                int soma = 0;
+                
+            try {
+                firstD = formato.parse(dataInicio);
+                finalD2 = formato.parse(dataFim);
+                Date fdate = null;
+                Calendar cal = Calendar.getInstance();
+                
+                for (int i = 0; i < 1; i++ ) {
+                    
+                    if(i == 0) {
+                        fdate = finalD2;
+                        }
+                        else {
+                        cal.setTime(fdate);
+                        cal.add(Calendar.DATE, 1);
+                        List<Itempedido> Ittt = null;
+                        Ittt = (List<Itempedido>) itemDao.listarPorDataCategoria(firstD, fdate, 1);
+
+                            for(Itempedido tet : Ittt) {
+
+                                soma = soma + tet.getQuantidade();
+
+                            }
+                        testelista.add(soma);
+                        
+                    }
+                }
+                
+                request.setAttribute("tes", testelista);
+                request.getAttribute("tes"); 
+            
+            } catch (ParseException ex) {
+                Logger.getLogger(ControleServletPainel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+                
+            
+            
+            //ItemPedidoDao itema = new ItemPedidoDao();
+           
+           /*String dateteste1 = "31/03/2022";
+           String dateteste2 = "04/04/2022";*/
+            
+          
+           
+           
+           
+            try {
+            firstD = formato.parse(dataInicio);
+            finalD2 = formato.parse(dataFim);
+            
+            List<Itempedido> Ittt = null;
+            Ittt = (List<Itempedido>) itemDao.listarPorDataCategoria(firstD, finalD2, 1);            
+            request.setAttribute("testeei", Ittt);
+            request.getAttribute("testeei");
+            /*Gson gson = new Gson();
+            gson.toJson(Ittt);*/
+           
+            } catch (ParseException ex) {
+                Logger.getLogger(ControleServletPainel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+          
+           
+               
+           //' PARAMOS AQUI 
+            
+        }  
         
         
  // --------------------------------------------------------------------------//

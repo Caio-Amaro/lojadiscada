@@ -3,11 +3,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Caio/Loja%20Discada/Discada/src/java/br/com/discada/controller/ControleServlet.java</file>
-            <file>file:/C:/Caio/Loja%20Discada/Discada/web/WEB-INF/viewsPainel/adicionarCupomPromo.jsp</file>
+            <file>file:/C:/Caio/Loja%20Discada/Discada/web/WEB-INF/viewsPainel/pesquisaVendasMes.jsp</file>
+            <file>file:/C:/Caio/Loja%20Discada/Discada/src/java/br/com/discada/model/DAO/DaoGenerico.java</file>
+            <file>file:/C:/Caio/Loja%20Discada/Discada/src/java/br/com/discada/services/MontaGrafico.java</file>
+            <file>file:/C:/Caio/Loja%20Discada/Discada/src/java/br/com/discada/model/jpa/Itempedido.java</file>
+            <file>file:/C:/Caio/Loja%20Discada/Discada/src/java/br/com/discada/model/DAO/ItemPedidoDao.java</file>
             <file>file:/C:/Caio/Loja%20Discada/Discada/src/java/br/com/discada/controller/ControleServletPainel.java</file>
-            <file>file:/C:/Caio/Loja%20Discada/Discada/web/WEB-INF/views/detalhePedido.jsp</file>
-            <file>file:/C:/Caio/Loja%20Discada/Discada/web/index.jsp</file>
         </group>
     </open-files>
 </project-private>

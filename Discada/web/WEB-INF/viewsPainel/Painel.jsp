@@ -2,26 +2,28 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
         <!-- Teste Gráfico JS -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.5.1/chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.5.1/chart.min.js"></script>
 
-      <script type="text/javascript">
-        function drawChart() {
-          var stars = [13850, 52122, 14825, 6939, 69763];
-          var starsDois = [3850, 5122, 142825, 639, 663];
-          var frameworks = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio'];
-          new Chart('myChart', {
-            type: 'line',
-            data: {
-              labels: frameworks,
-              datasets: [{
-                label: 'Vendas Gerais',
-                data: stars
-                //data: starsDois
-              }]
-            },
-          });
-        }
-      </script>
+    <script type="text/javascript">
+      function drawChart() {
+        var stars = [11850, 52122, 14825, 6939, 69763];
+        var starsDois = [3850, 5122, 142825, 639, 663];
+        var frameworks = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho'];
+        new Chart('myChart', {
+          type: 'line',
+          data: {
+            labels: frameworks,
+            datasets: [{
+              label: 'Vendas Gerais',
+              data: stars               
+            },{
+              label: 'Vendas Gerais',
+              data: starsDois               
+            }]
+          },
+        });
+      }
+    </script>
      <!-- FIm do Teste -->
 
 </head>

@@ -3,8 +3,8 @@ package br.com.discada.model.DAO;
 
 //import Cart.ShoppingCartItem;
 import br.com.discada.model.jpa.Itempedido;
-import br.com.discada.model.jpa.Pedido;
 import br.com.discada.model.jpa.Produto;
+import br.com.discada.services.MontaGrafico;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -44,6 +44,12 @@ public class ItemPedidoDao<TIPO> extends DaoGenerico<Itempedido> implements Seri
         
     }
      
+public int MetodoFazerFat(int y) {
+    
+    if (y == 0) // Se y for igual a 0 (zero) então retorna 1.
+      return 1;
+    
+    return y * MetodoFazerFat(y - 1);
    
      
      // ----------------------------------------------------------------------------------------
@@ -63,12 +69,13 @@ public class ItemPedidoDao<TIPO> extends DaoGenerico<Itempedido> implements Seri
         
         //sql.append("ORDER BY p.data");
         
+                
             listaIte=  em.createQuery(sql.toString())
                 .setParameter("dataInicio", datainicio)
                 .setParameter("idp", idpr)
                 .setParameter("dataFim", datafim)
                 .getResultList();
-            
+        
             return listaIte;
   
     }
@@ -104,6 +111,61 @@ public class ItemPedidoDao<TIPO> extends DaoGenerico<Itempedido> implements Seri
          this.valorFinal = this.valorFinal + lis.getValortotalitem();
       }
       }
+      
+      
+       public MontaGrafico listarPorDataProduto(Date datainicio, Date datafim, int idpr)
+    {            
+        
+        StringBuilder sql = new StringBuilder();
+        sql.append("SELECT i FROM Itempedido i ");
+        
+        if(datainicio != null && datafim != null && !datainicio.equals("") && !datafim.equals("")){
+        
+            sql.append("WHERE i.idped.data BETWEEN :dataInicio AND :dataFim ");
+        
+        }
+        sql.append("AND i.idpro.proid = :idp");
+        
+        //sql.append("ORDER BY p.data");
+        
+            listaIte =  em.createQuery(sql.toString())
+                .setParameter("dataInicio", datainicio)
+                .setParameter("idp", idpr)
+                .setParameter("dataFim", datafim)
+                .getResultList();
+        
+            int soma = 0;
+            double somadois = 0;
+            String nomeprod = "";
+            
+            List somqtd = new ArrayList<>();
+            List somvlr = new ArrayList<>();
+            List nomepr = new ArrayList<>();
+            
+            MontaGrafico montar = new MontaGrafico();
+            
+        for (Itempedido lis : listaIte) {
+         
+            soma = soma + lis.getQuantidade();
+            somadois = somadois + lis.getValortotalitem();
+            
+            if (nomeprod == null || nomeprod.equals("")) {
+                nomeprod = lis.getIdpro().getPronome();
+            }
+        }
+        
+        somqtd.add(soma);
+        somvlr.add(somadois);
+        nomepr.add(nomeprod);
+        
+        montar.setSomqtd(somqtd);
+        montar.setSomvlr(somvlr);
+        montar.setNomepr(nomepr);
+        
+        return montar;
+        
+       
+    }
 
     
 }
