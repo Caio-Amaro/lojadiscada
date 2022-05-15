@@ -1,8 +1,33 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.5.1/chart.min.js"></script>
+    
+    <script type="text/javascript">
+      function drawChart() {
+        var stars = [11850, 52122, 14825, 6939, 69763];
+        var starsDois = [3850, 5122, 142825, 639, 663];
+        var frameworks = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho'];
+        new Chart('myChart', {
+          type: 'line',
+          data: {
+            labels: frameworks,
+            datasets: [{
+              label: 'Vendas Gerais',
+              data: stars               
+            },{
+              label: 'Vendas Gerais',
+              data: starsDois               
+            }]
+          },
+        });
+      }
+    </script>
+     <!-- FIm do Teste -->
 
+</head>
 
-
+<body onload="drawChart()">
 
 <!-- Page content-->
 
@@ -37,24 +62,26 @@
         <hr>  <%-- transform: rotateX(180deg); --%>
   <h3>Gráfico de Progressão de Vendas</h3>
   
-  <c:forEach var="tey" items="${prodOne}">
-      <p>te : ${tey}</p>      
-  </c:forEach>
   <c:forEach var="tey1" items="${prodOneUm}">
-      <p>te : ${tey1}</p>      
+      <p>Produto : ${tey1}</p>      
   </c:forEach>
-  <c:forEach var="tey2" items="${prodOneDois}">
-      <p>te : ${tey2}</p>      
+  <c:forEach var="tey" items="${prodOne}">
+      <p>Quantidade : ${tey}</p>      
   </c:forEach>
-      
-  <c:forEach var="te" items="${prodTw}">
-      <p>te : ${te}</p>      
+    <c:forEach var="tey2" items="${prodOneDois}">
+      <p>Vendas : R$ ${tey2}</p>      
   </c:forEach>
+  
+      <%-- --------------------------------------------- --%>
+  
   <c:forEach var="te1" items="${prodTwOne}">
-      <p>te : ${te1}</p>      
+      <p>Produto : ${te1}</p>      
   </c:forEach>
+  <c:forEach var="te" items="${prodTw}">
+      <p>Quantidade : ${te}</p>      
+  </c:forEach>  
   <c:forEach var="te2" items="${prodTwDois}">
-      <p>te : ${te2}</p>      
+      <p>Vendas : R$ ${te2}</p>      
   </c:forEach>    
       
       
@@ -64,7 +91,5 @@
    
 </div>     
         <p style="margin-top: 30em;"></p>
-<!-- Bootstrap core JS-->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>       
-<!-- Core theme JS-->
-<script src="/js/scripts.js"></script>
+</body>
+

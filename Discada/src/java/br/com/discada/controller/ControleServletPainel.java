@@ -21,7 +21,10 @@ import br.com.discada.model.jpa.Tipostatus;
 import br.com.discada.services.MontaGrafico;
 import br.com.discada.services.controleCupom;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import java.awt.Color;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -31,6 +34,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.scene.chart.CategoryAxis;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -38,6 +42,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartFrame;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.renderer.category.CategoryItemRenderer;
+import org.jfree.data.category.DefaultCategoryDataset;
 
 @WebServlet(name = "ControleServletPainel", 
                    loadOnStartup = 2,
@@ -311,36 +322,74 @@ private AcessoDao acDao;*/
         
         }
     
-    // ----------------------------------------------------------------------
+    // ------------------------------------------------------------------
         
-        else if (userPath.equals("/Painel")){
+        else if (userPath.equals ("/Painel")){
             
-           /* String datinicio = request.getParameter("datainicial");
-            String datfim = request.getParameter("datafinal");*/            
-            //if(datinicio == null  && datinicio.equals(" ") && datfim == null && datfim.equals(" ")) {*/
+          
+            SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+
             
+            String dataInicio = request.getParameter("datainicial");
+            String dataFim = request.getParameter("datafinal");
+            
+            request.setAttribute("prodOne", dataInicio);
+            request.getAttribute("prodOne");
+            
+            
+            if(dataInicio != null && !dataInicio.isEmpty()){
+
+                try {
+                    //int dias = Days.daysBetween(dataInicio, dataFim).getDays();
+                    Date firstDt = formato.parse(dataInicio);
+                    Date finalDt = formato.parse(dataFim);
+
+                    MontaGrafico novoGrafico = new MontaGrafico();
+                    MontaGrafico novoGrafico2 = new MontaGrafico();
+                    novoGrafico = (MontaGrafico) itemDao.listarPorDataProduto(firstDt, finalDt, 1);                                               
+                    novoGrafico2 = (MontaGrafico) itemDao.listarPorDataProduto(firstDt, finalDt, 2); 
+                    
+                    DefaultCategoryDataset dataset = new DefaultCategoryDataset();
            
-            /*SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+                    dataset.addValue((Number) novoGrafico.getSomqtd(), (Comparable) novoGrafico.getNomepr(), dataFim);
+                    dataset.addValue((Number) novoGrafico2.getSomqtd(), (Comparable) novoGrafico2.getNomepr(), dataFim);
+
+                    JFreeChart chart = ChartFactory.createLineChart(
+                        "Desempenho Por Produto", 
+                        "Valor do Produto", 
+                        "Dias", 
+                        dataset, 
+                        PlotOrientation.VERTICAL,
+                        true,true,false                 
+                );
+                
+                chart.setBorderPaint(Color.WHITE);
+                chart.getTitle().setPaint(Color.MAGENTA);
+                CategoryPlot pl = chart.getCategoryPlot();
+                pl.setForegroundAlpha(0.9f);
+                pl.setRangeGridlinePaint(Color.RED);
+                pl.setDomainGridlinesVisible(true);
+                pl.setDomainGridlinePaint(Color.BLACK);
+                CategoryItemRenderer renderer = pl.getRenderer();
+                renderer.setSeriesPaint(1, Color.RED);
+                renderer.setSeriesPaint(0, Color.GREEN);
+                ChartFrame frame1 = new ChartFrame("Grafico de Linhas", chart);
+                
+                frame1.setVisible(true);
+                frame1.setSize(800, 300);
+                
+                
+                
+                
+                } catch (ParseException ex) {
+                    Logger.getLogger(ControleServletPainel.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+            }       
+                
+          
+        } 
            
-            
-            String datinicio = "03/11/2021";
-            String datfim = "04/11/2021";
-            
-            List<Pedido> pedid;
-             try {
-                 pedid = (List<Pedido>) peDao.listarPorData(formato.parse(datinicio), formato.parse(datfim));
-                 session.getAttribute("pedo");
-                 session.setAttribute("pedo", pedid); 
-                 userPath = "/Painel";
-             } catch (ParseException ex) {
-                 Logger.getLogger(ControllerServAdmin.class.getName()).log(Level.SEVERE, null, ex);
-             }
-            //}*/
-            
-             
-            
-        }
-    
  // ----------------------------------------------------------------------
         else if (userPath.equals("/adicionarCupomPromo")){
             
@@ -403,7 +452,8 @@ private AcessoDao acDao;*/
     }
     
     // ----------------------------------------------------------------------
-    // ----------------------------------------------------------------------
+  
+    
     // ----------------------------------------------------------------------
     
     @Override
@@ -1158,55 +1208,83 @@ private AcessoDao acDao;*/
         
  // ------------------------------------------------------------------
         
-        else if (userPath.equals ("/pesquisaVendasBean")){
+        else if (userPath.equals ("/Painel")){
             
           
-           SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+            SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
                      
-           String dataInicio = request.getParameter("datainicial");
-           String dataFim = request.getParameter("datafinal");
-           
-            try {
-                //int dias = Days.daysBetween(dataInicio, dataFim).getDays();
-                Date firstDt = formato.parse(dataInicio);
-                Date finalDt = formato.parse(dataFim);
+             
+            String dataInicio = request.getParameter("datainicial");
+            String dataFim = request.getParameter("datafinal");
+            
+            request.setAttribute("prodOne", dataInicio);
+            request.getAttribute("prodOne");
+            
+            
+            if(dataInicio != null && !dataInicio.isEmpty()){
+
+                try {
+                    //int dias = Days.daysBetween(dataInicio, dataFim).getDays();
+                    Date firstDt = formato.parse(dataInicio);
+                    Date finalDt = formato.parse(dataFim);
+
+                    MontaGrafico novoGrafico = new MontaGrafico();
+                    MontaGrafico novoGrafico2 = new MontaGrafico();
+
+
+                    novoGrafico = (MontaGrafico) itemDao.listarPorDataProduto(firstDt, finalDt, 1);                                               
+                    novoGrafico2 = (MontaGrafico) itemDao.listarPorDataProduto(firstDt, finalDt, 2);                                               
+                    //ObjectMapper mapper = new ObjectMapper();
+                    
+                   //String json = mapper.writeValueAsString(novoGrafico);                    
+                    //response.getWriter().write(json);
+                    
+                    //request.setAttribute("testeUm", json);
+                    request.getAttribute("testeUm");
+                    
                 
-                MontaGrafico tett = new MontaGrafico();
-               
-                                
-                tett = (MontaGrafico) itemDao.listarPorDataProduto(firstDt, finalDt, 1);                                               
-                request.setAttribute("prodOne", tett.getSomqtd());
+                novoGrafico.getSomqtd();
+                
+                
+                
+                /*request.setAttribute("prodOne", json2);
                 request.getAttribute("prodOne");
-                request.setAttribute("prodOneUm", tett.getNomepr());
+                /*request.setAttribute("prodOneUm", tett.getNomepr());
                 request.getAttribute("prodOneUm");
                 request.setAttribute("prodOneDois", tett.getSomvlr());
                 request.getAttribute("prodOneDois");
                 
-                tett = (MontaGrafico) itemDao.listarPorDataProduto(firstDt, finalDt, 2);                                               
+                tett = (MontaGrafico) itemDao.listarPorDataProduto(firstDt, finalDt, 3);                                               
                 request.setAttribute("prodTw", tett.getSomqtd());
                 request.getAttribute("prodTw");
                 request.setAttribute("prodTwOne", tett.getNomepr());
                 request.getAttribute("prodTwOne");
                 request.setAttribute("prodTwDois", tett.getSomvlr());
-                request.getAttribute("prodTwDois");
+                request.getAttribute("prodTwDois");*/
+                
+         
                 
                 
-            } catch (ParseException ex) {
+                
+               
+                
+                } catch (ParseException ex) {
                 Logger.getLogger(ControleServletPainel.class.getName()).log(Level.SEVERE, null, ex);
-            }
+                    }
               
-               
-             userPath = "/pesquisaVendasMes";   
+            }       
+                userPath = "/Painel";   
             
-          
-        } 
+            
+           
                
-        
+        }     
         
         
  // --------------------------------------------------------------------------//
         
  // --------------------------------------------------------------------------//
+        
         
         String url = "/WEB-INF/viewsPainel" + userPath + ".jsp";
         try {

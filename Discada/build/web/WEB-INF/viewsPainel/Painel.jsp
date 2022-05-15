@@ -1,36 +1,52 @@
+
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
         <!-- Teste Gráfico JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.5.1/chart.min.js"></script>
-
-    <script type="text/javascript">
-      function drawChart() {
-        var stars = [11850, 52122, 14825, 6939, 69763];
-        var starsDois = [3850, 5122, 142825, 639, 663];
-        var frameworks = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho'];
-        new Chart('myChart', {
-          type: 'line',
-          data: {
-            labels: frameworks,
-            datasets: [{
-              label: 'Vendas Gerais',
-              data: stars               
-            },{
-              label: 'Vendas Gerais',
-              data: starsDois               
-            }]
-          },
-        });
-      }
-    </script>
+    <%--<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.5.1/chart.min.js"></script>--%>
+ 
      <!-- FIm do Teste -->
+     
+   
 
 </head>
+<h4 style="text-align: center;" class="mt-4">PESQUISA ANUAL DE MOVIMENTAÇÃO ${prodOne}</h4>
 
+<div class="container-fluid">
+    <hr>
+    <%--<form action="${pageContext.request.contextPath}/Painel" method="POST">--%>
+        <div class="col-6" style="margin-top: .5em; margin-bottom: 1em;">
+            <label>ESCOLHA O PRODUTO PARA ANÁLISE ANUAL DE PROGRESSÃO</label>
+            <p>teste ${testeUm} </p>
+            <form class="form-inline" id="formAction"  action="${pageContext.request.contextPath}/Painel" method="GET">
+                <div class="row">
+                    <div class="col-4">
+                        <label id="sloganUm" style="margin-top: 2em;">Data Inicial</label>
+                        <input id="campoPesquisa" type="text" name="datainicial" class="form-control" placeholder="dia/mês/ano">
+                    </div>
+                    <div class="col-4">
+                        <label id="sloganUm" style="margin-top: 2em;">Data Final</label>
+                        <input id="campoPesquisa" type="text" name="datafinal" class="form-control" placeholder="dia/mês/ano">
+                     </div>
 
-<body onload="drawChart()"> 
-     <div class="container">
+                    <div style="margin-top: .5em;">
+                        <button onclick="gerarGrafico();" style="margin-top:.5em; margin-left: .1em; width: 50%; height: auto;" type="submit" class="btn btn-outline-dark my-1">Gerar Teste</button>
+                    </div>
+                </div>
+            </form>
+            
+        </div>
+    <%--</form> --%>
+</div>
+
+<%-- <body onload="drawChart()"> --%>
+    <div style="height: auto; width: 80%;">
+        <div>
+            <canvas id="myChart"></canvas>
+        </div>
+    </div>
+    
+  <%--  <div class="container">
          <h3 id="sloganUm" style="text-align: center;" class="mt-4">PAINEL ADMINISTRATIVO DISCADA</h3>
      </div>
 
@@ -118,6 +134,8 @@
              </div>
 
          </div>
-    </section>
+    </section> --%>
 </body>
+
+  
     
