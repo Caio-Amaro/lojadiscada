@@ -41,7 +41,16 @@
             </form>
             
         </div>
-    
+ 
+<c:forEach var="tey1" items="${testeUm}">
+      <p>Produto : ${tey1}</p>      
+  </c:forEach>
+  <c:forEach var="tey" items="${testeDois}">
+      <p>Quantidade : ${tey}</p>      
+  </c:forEach>
+    <c:forEach var="tey2" items="${testeTres}">
+      <p>Vendas : R$ ${tey2}</p>      
+  </c:forEach>                
 
 
 <%-- <body onload="drawChart()"> --%>

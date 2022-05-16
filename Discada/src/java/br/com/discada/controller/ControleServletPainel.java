@@ -18,6 +18,7 @@ import br.com.discada.model.jpa.Pedido;
 import br.com.discada.model.jpa.Produto;
 import br.com.discada.model.jpa.Statuspostagem;
 import br.com.discada.model.jpa.Tipostatus;
+import br.com.discada.services.MontaGrafico;
 import br.com.discada.services.controleCupom;
 import com.keypoint.PngEncoder;
 import com.sun.image.codec.jpeg.JPEGCodec;
@@ -1060,12 +1061,9 @@ private AcessoDao acDao;*/
            String dataFim = request.getParameter("datafinal");
            int dife = 0;
            
-           Date teste = new Date();
-           //ArrayList teste = new ArrayList<>();
-           
            
             try {
-                //int dias = Days.daysBetween(dataInicio, dataFim).getDays();
+                
                 Date firstDt = formato.parse(dataInicio);
                 Date finalDt = formato.parse(dataFim);
                 
@@ -1083,9 +1081,16 @@ private AcessoDao acDao;*/
             }
                 
                 
-                List testelista = new ArrayList<>();
-                List testelista2 = new ArrayList<>();
-                int soma = 0;
+                List testelista = new ArrayList();
+                List testelista1 = new ArrayList();                
+                List testelista2 = new ArrayList();
+                List testelista3 = new ArrayList();
+                List testelista4 = new ArrayList();
+                List testelista5 = new ArrayList();
+                List testelista6 = new ArrayList();
+                List testelista7 = new ArrayList();
+                
+                int soma = 0, som1 = 0, soma2, soma3, soma4, soma5, soma6, soma7;                 
                 
             try {
                 Date firstD;
@@ -1113,44 +1118,164 @@ private AcessoDao acDao;*/
                         calFinal.add(Calendar.DAY_OF_MONTH, i+1);
                         String datafor = formato.format(cal.getTime());
                         testelista2.add(datafor);
-                        List<Itempedido> Ittt = null;
-                        Ittt = (List<Itempedido>) itemDao.listarPorDataCategoria(cal.getTime(), calFinal.getTime(), 1);
                         
-                            for(Itempedido tet : Ittt) {
-
-                                soma = soma + tet.getQuantidade();                        
+                        List<Itempedido> produto1 = null;
+                        List<Itempedido> produto2 = null;
+                        List<Itempedido> produto3 = null;
+                        List<Itempedido> produto4 = null;
+                        List<Itempedido> produto5 = null;
+                        List<Itempedido> produto6 = null;
+                        List<Itempedido> produto7 = null;
+                        List<Itempedido> produto8 = null;
+                        
+                        
+                        
+                        produto1 = (List<Itempedido>) itemDao.listarPorDataCategoria(cal.getTime(), calFinal.getTime(), 1);
+                        produto2 = (List<Itempedido>) itemDao.listarPorDataCategoria(cal.getTime(), calFinal.getTime(), 2);
+                        produto3 = (List<Itempedido>) itemDao.listarPorDataCategoria(cal.getTime(), calFinal.getTime(), 3);
+                        produto4 = (List<Itempedido>) itemDao.listarPorDataCategoria(cal.getTime(), calFinal.getTime(), 4);
+                        produto5 = (List<Itempedido>) itemDao.listarPorDataCategoria(cal.getTime(), calFinal.getTime(), 5);
+                        produto6 = (List<Itempedido>) itemDao.listarPorDataCategoria(cal.getTime(), calFinal.getTime(), 6);
+                        produto7 = (List<Itempedido>) itemDao.listarPorDataCategoria(cal.getTime(), calFinal.getTime(), 7);
+                        produto8 = (List<Itempedido>) itemDao.listarPorDataCategoria(cal.getTime(), calFinal.getTime(), 8);
+                        
+                            for(Itempedido tet : produto1) { 
+                                soma = soma + tet.getQuantidade();                                
                             }
-                        
+                            for(Itempedido tet : produto2) { 
+                                som1 = som1 + tet.getQuantidade();                                
+                            }
+                          
                         String datafor2 = formato.format(calFinal.getTime());
                         
-                        
-                        //testelista2.add(datafor2);
-                        testelista2.add(soma);
-                        
                         testelista.add(soma);
+                        
                         
                         firstD = finalD2;
                         soma = 0;
                         
-                  //  }
+                 
                 }
                 
-                request.setAttribute("tes", testelista);
+               /* request.setAttribute("tes", testelista);
                 request.getAttribute("tes"); 
-                
-                request.setAttribute("tesd", testelista2);
-                request.getAttribute("tesd"); 
+                request.setAttribute("tes2", testelista2);
+                request.getAttribute("tes2"); */
             
             
             } catch (ParseException ex) {
                 Logger.getLogger(ControleServletPainel.class.getName()).log(Level.SEVERE, null, ex);
             }
-          
+            
+            
+            String defe = request.getParameter("defe");            
+            
+            if (defe != null && !defe.equals("")){
+            int j = 1;    
+            response.setContentType("image/PNG");
+            OutputStream out = response.getOutputStream();
+            
+            DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+           
+            for (int i = 0; i < testelista.size(); i++) {
+                
+                 
+                int dadosentrada = (int) testelista.get(i);
+                dataset.addValue(dadosentrada, "Produto 1", "Dia" + j); 
+                j = j + 1;
+            }
+            
+            
+            //dataset.addValue(6, "Produto 2", "Dia 1");
+            //dataset.addValue(9, "Produto 3", "Dia 1");
+            
+            
+            //JFreeChart cha = ChartFactory.createBarChart("Grafico Teste", "Dias Contados", "Quantidad del Productos", dataset, PlotOrientation.VERTICAL, true, true, false);
+            JFreeChart cha1 = ChartFactory.createLineChart("Grafico de Vendas à partir de " + dataInicio , "Produtos", "Quantidad", dataset, PlotOrientation.VERTICAL, true, true, true);
+            
+            
+            int baixo = 600;
+            int alto = 750;
+            
+            ChartUtilities.writeChartAsPNG(out, cha1, alto, baixo);
+            //ChartUtilities.writeChartAsPNG(out, cha1, alto, baixo);
+            //ChartUtilities.writeChartAsPNG(out, cha1, alto, baixo);
+            
+            }  
         } 
         
  // ------------------------------------------------------------------
         
         else if (userPath.equals ("/Painel")){
+            
+            
+             // Parte de baixo é a consulta no banco que utilizaremos depois que o gráfico funcionar
+    
+    
+           SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+                     
+             
+            String dataInicio = request.getParameter("datainicial");
+            String dataFim = request.getParameter("datafinal");
+            
+            if(dataInicio != null && !dataInicio.isEmpty()){
+
+                try {
+                    //int dias = Days.daysBetween(dataInicio, dataFim).getDays();
+                    Date firstDt = formato.parse(dataInicio);
+                    Date finalDt = formato.parse(dataFim);
+
+                    MontaGrafico novoGrafico = new MontaGrafico();
+                    MontaGrafico novoGrafico2 = new MontaGrafico();
+
+
+                    novoGrafico = (MontaGrafico) itemDao.listarPorDataProduto(firstDt, finalDt, 1);                                               
+                    novoGrafico2 = (MontaGrafico) itemDao.listarPorDataProduto(firstDt, finalDt, 2);                                               
+                    
+                    
+                    request.setAttribute("testeUm", novoGrafico.getNomepr());
+                    request.getAttribute("testeUm");
+                    
+                    request.setAttribute("testeDois", novoGrafico.getSomqtd());
+                    request.getAttribute("testeDois");
+                    
+                     request.setAttribute("testeTres", novoGrafico.getSomvlr());
+                    request.getAttribute("testeTres");
+                
+                    novoGrafico.getSomqtd();
+                
+                
+                
+                /*request.setAttribute("prodOne", json2);
+                request.getAttribute("prodOne");
+                /*request.setAttribute("prodOneUm", tett.getNomepr());
+                request.getAttribute("prodOneUm");
+                request.setAttribute("prodOneDois", tett.getSomvlr());
+                request.getAttribute("prodOneDois");
+                
+                tett = (MontaGrafico) itemDao.listarPorDataProduto(firstDt, finalDt, 3);                                               
+                request.setAttribute("prodTw", tett.getSomqtd());
+                request.getAttribute("prodTw");
+                request.setAttribute("prodTwOne", tett.getNomepr());
+                request.getAttribute("prodTwOne");
+                request.setAttribute("prodTwDois", tett.getSomvlr());
+                request.getAttribute("prodTwDois");*/
+                
+         
+                
+                
+                
+               
+                
+                } catch (ParseException ex) {
+                Logger.getLogger(ControleServletPainel.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+              
+            }       
+                userPath = "/Painel";  
+            
+            
+         /*             
             
             String defe = request.getParameter("defe");
             
@@ -1162,18 +1287,31 @@ private AcessoDao acDao;*/
             
             DefaultCategoryDataset dataset = new DefaultCategoryDataset();
             
-            dataset.addValue(3, "Teste Coluna", "TesteColuna");
-            dataset.addValue(10, "Teste Legal",  "TesteLegal");
-            dataset.addValue(8, "Teste Massa", "TesteMassa");
+            
+            
+            dataset.addValue(3, "Produto 1", "Dia 1");             
+            dataset.addValue(10, "Produto 1",  "Dia 2");
+            dataset.addValue(8, "Produto 1", "Dia 3");
+            
+            dataset.addValue(6, "Produto 2", "Dia 1");
+            dataset.addValue(1, "Produto 2",  "Dia 2");
+            dataset.addValue(4, "Produto 2", "Dia 3");
+            
+            dataset.addValue(9, "Produto 3", "Dia 1");
+            dataset.addValue(9, "Produto 3",  "Dia 2");
+            dataset.addValue(2, "Produto 3", "Dia 3");
             
             JFreeChart cha = ChartFactory.createBarChart("Grafico Teste", "Dias Contados", "Quantidad del Productos", dataset, PlotOrientation.VERTICAL, true, true, false);
-           
-            JFreeChart cha1 = ChartFactory.createLineChart("Grafico Linha", "Teste dois", defe, dataset);
+            JFreeChart cha1 = ChartFactory.createLineChart("Título", "Produtos", "Quantidad", dataset, PlotOrientation.VERTICAL, true, true, true);
+            
             
             int baixo = 600;
             int alto = 750;
             
-            ChartUtilities.writeChartAsPNG(out, cha, alto, baixo);
+            ChartUtilities.writeChartAsPNG(out, cha1, alto, baixo);
+            ChartUtilities.writeChartAsPNG(out, cha1, alto, baixo);
+            ChartUtilities.writeChartAsPNG(out, cha1, alto, baixo);
+            
             
             }
             
