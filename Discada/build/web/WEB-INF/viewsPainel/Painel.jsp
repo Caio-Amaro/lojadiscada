@@ -1,7 +1,6 @@
-
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-
+<%@page import="java.io.*, javax.imageio.*, java.awt.image.*, javax.servlet.*, javax.servlet.http.*,org.jfree.chart.*, org.jfree.chart.plot.*, org.jfree.data.category.*"%>
         <!-- Teste Gráfico JS -->
     <%--<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.5.1/chart.min.js"></script>--%>
  
@@ -10,15 +9,20 @@
    
 
 </head>
+<body>
+    
 <h4 style="text-align: center;" class="mt-4">PESQUISA ANUAL DE MOVIMENTAÇÃO ${prodOne}</h4>
 
-<div class="container-fluid">
-    <hr>
-    <%--<form action="${pageContext.request.contextPath}/Painel" method="POST">--%>
+</body>
+
+
+    
         <div class="col-6" style="margin-top: .5em; margin-bottom: 1em;">
+            
             <label>ESCOLHA O PRODUTO PARA ANÁLISE ANUAL DE PROGRESSÃO</label>
-            <p>teste ${testeUm} </p>
-            <form class="form-inline" id="formAction"  action="${pageContext.request.contextPath}/Painel" method="GET">
+            
+            
+            <form class="form-inline" id="formAction"  action="${pageContext.request.contextPath}/Painel" method="POST">
                 <div class="row">
                     <div class="col-4">
                         <label id="sloganUm" style="margin-top: 2em;">Data Inicial</label>
@@ -30,21 +34,18 @@
                      </div>
 
                     <div style="margin-top: .5em;">
-                        <button onclick="gerarGrafico();" style="margin-top:.5em; margin-left: .1em; width: 50%; height: auto;" type="submit" class="btn btn-outline-dark my-1">Gerar Teste</button>
+                        <input id="defe" type="hidden" value="defe" name="defe" >
+                        <button style="margin-top:.5em; margin-left: .1em; width: 50%; height: auto;" type="submit" class="btn btn-outline-dark my-1">Gerar Teste</button>
                     </div>
                 </div>
             </form>
             
         </div>
-    <%--</form> --%>
-</div>
+    
+
 
 <%-- <body onload="drawChart()"> --%>
-    <div style="height: auto; width: 80%;">
-        <div>
-            <canvas id="myChart"></canvas>
-        </div>
-    </div>
+   
     
   <%--  <div class="container">
          <h3 id="sloganUm" style="text-align: center;" class="mt-4">PAINEL ADMINISTRATIVO DISCADA</h3>

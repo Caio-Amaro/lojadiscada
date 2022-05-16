@@ -13,10 +13,6 @@
         <servlet-name>ControleServletPainel</servlet-name>
         <servlet-class>br.com.discada.controller.ControleServletPainel</servlet-class>
     </servlet>
-    <servlet>
-        <servlet-name>GraficoServlet</servlet-name>
-        <servlet-class>br.com.discada.controller.GraficoServlet</servlet-class>
-    </servlet>
     <servlet-mapping>
         <servlet-name>ControleServlet</servlet-name>
         <url-pattern>/addAcesso</url-pattern>
@@ -76,11 +72,6 @@
         <url-pattern>/consultaNomeCliente</url-pattern>
         <url-pattern>/detalheClientes</url-pattern>
         <url-pattern>/controleEstoque</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>GraficoServlet</servlet-name>
-        <url-pattern>/PaginaGrafico</url-pattern>
-        <url-pattern>/PainelGrafico</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

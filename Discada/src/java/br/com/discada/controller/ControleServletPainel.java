@@ -18,13 +18,18 @@ import br.com.discada.model.jpa.Pedido;
 import br.com.discada.model.jpa.Produto;
 import br.com.discada.model.jpa.Statuspostagem;
 import br.com.discada.model.jpa.Tipostatus;
-import br.com.discada.services.MontaGrafico;
 import br.com.discada.services.controleCupom;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.keypoint.PngEncoder;
+import com.sun.image.codec.jpeg.JPEGCodec;
+import com.sun.image.codec.jpeg.JPEGEncodeParam;
+import com.sun.image.codec.jpeg.JPEGImageEncoder;
+import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.OutputStream;
+import static java.lang.System.out;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -34,8 +39,8 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.scene.chart.CategoryAxis;
 import javax.ejb.EJB;
+import javax.imageio.ImageIO;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -43,11 +48,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartFrame;
+import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.chart.renderer.category.CategoryItemRenderer;
 import org.jfree.data.category.DefaultCategoryDataset;
 
 @WebServlet(name = "ControleServletPainel", 
@@ -326,68 +329,7 @@ private AcessoDao acDao;*/
         
         else if (userPath.equals ("/Painel")){
             
-          
-            SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
-
             
-            String dataInicio = request.getParameter("datainicial");
-            String dataFim = request.getParameter("datafinal");
-            
-            request.setAttribute("prodOne", dataInicio);
-            request.getAttribute("prodOne");
-            
-            
-            if(dataInicio != null && !dataInicio.isEmpty()){
-
-                try {
-                    //int dias = Days.daysBetween(dataInicio, dataFim).getDays();
-                    Date firstDt = formato.parse(dataInicio);
-                    Date finalDt = formato.parse(dataFim);
-
-                    MontaGrafico novoGrafico = new MontaGrafico();
-                    MontaGrafico novoGrafico2 = new MontaGrafico();
-                    novoGrafico = (MontaGrafico) itemDao.listarPorDataProduto(firstDt, finalDt, 1);                                               
-                    novoGrafico2 = (MontaGrafico) itemDao.listarPorDataProduto(firstDt, finalDt, 2); 
-                    
-                    DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-           
-                    dataset.addValue((Number) novoGrafico.getSomqtd(), (Comparable) novoGrafico.getNomepr(), dataFim);
-                    dataset.addValue((Number) novoGrafico2.getSomqtd(), (Comparable) novoGrafico2.getNomepr(), dataFim);
-
-                    JFreeChart chart = ChartFactory.createLineChart(
-                        "Desempenho Por Produto", 
-                        "Valor do Produto", 
-                        "Dias", 
-                        dataset, 
-                        PlotOrientation.VERTICAL,
-                        true,true,false                 
-                );
-                
-                chart.setBorderPaint(Color.WHITE);
-                chart.getTitle().setPaint(Color.MAGENTA);
-                CategoryPlot pl = chart.getCategoryPlot();
-                pl.setForegroundAlpha(0.9f);
-                pl.setRangeGridlinePaint(Color.RED);
-                pl.setDomainGridlinesVisible(true);
-                pl.setDomainGridlinePaint(Color.BLACK);
-                CategoryItemRenderer renderer = pl.getRenderer();
-                renderer.setSeriesPaint(1, Color.RED);
-                renderer.setSeriesPaint(0, Color.GREEN);
-                ChartFrame frame1 = new ChartFrame("Grafico de Linhas", chart);
-                
-                frame1.setVisible(true);
-                frame1.setSize(800, 300);
-                
-                
-                
-                
-                } catch (ParseException ex) {
-                    Logger.getLogger(ControleServletPainel.class.getName()).log(Level.SEVERE, null, ex);
-                }
-
-            }       
-                
-          
         } 
            
  // ----------------------------------------------------------------------
@@ -1210,8 +1152,35 @@ private AcessoDao acDao;*/
         
         else if (userPath.equals ("/Painel")){
             
-          
-            SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+            String defe = request.getParameter("defe");
+            
+            
+            if (defe != null && !defe.equals("")){
+                
+            response.setContentType("image/PNG");
+            OutputStream out = response.getOutputStream();
+            
+            DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+            
+            dataset.addValue(3, "Teste Coluna", "TesteColuna");
+            dataset.addValue(10, "Teste Legal",  "TesteLegal");
+            dataset.addValue(8, "Teste Massa", "TesteMassa");
+            
+            JFreeChart cha = ChartFactory.createBarChart("Grafico Teste", "Dias Contados", "Quantidad del Productos", dataset, PlotOrientation.VERTICAL, true, true, false);
+           
+            JFreeChart cha1 = ChartFactory.createLineChart("Grafico Linha", "Teste dois", defe, dataset);
+            
+            int baixo = 600;
+            int alto = 750;
+            
+            ChartUtilities.writeChartAsPNG(out, cha, alto, baixo);
+            
+            }
+            
+    // Parte de baixo é a consulta no banco que utilizaremos depois que o gráfico funcionar
+    
+    
+           /* SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
                      
              
             String dataInicio = request.getParameter("datainicial");
@@ -1260,7 +1229,7 @@ private AcessoDao acDao;*/
                 request.setAttribute("prodTwOne", tett.getNomepr());
                 request.getAttribute("prodTwOne");
                 request.setAttribute("prodTwDois", tett.getSomvlr());
-                request.getAttribute("prodTwDois");*/
+                request.getAttribute("prodTwDois");
                 
          
                 
@@ -1273,7 +1242,7 @@ private AcessoDao acDao;*/
                     }
               
             }       
-                userPath = "/Painel";   
+                userPath = "/Painel";  */ 
             
             
            
