@@ -1089,8 +1089,10 @@ private AcessoDao acDao;*/
                 List testelista5 = new ArrayList();
                 List testelista6 = new ArrayList();
                 List testelista7 = new ArrayList();
+                List testelista8 = new ArrayList();
                 
-                int soma = 0, som1 = 0, soma2, soma3, soma4, soma5, soma6, soma7;                 
+                int soma = 0, som1 = 0, soma2=0, 
+                        soma3=0, soma4=0, soma5=0, soma6=0, soma7=0;                 
                 
             try {
                 Date firstD;
@@ -1145,22 +1147,45 @@ private AcessoDao acDao;*/
                             for(Itempedido tet : produto2) { 
                                 som1 = som1 + tet.getQuantidade();                                
                             }
+                            for(Itempedido tet : produto3) { 
+                                soma2 = soma2 + tet.getQuantidade();                                
+                            }
+                            for(Itempedido tet : produto4) { 
+                                soma3 = soma3 + tet.getQuantidade();                                
+                            }
+                            for(Itempedido tet : produto5) { 
+                                soma4 = soma4 + tet.getQuantidade();                                
+                            }
+                            for(Itempedido tet : produto6) { 
+                                soma5 = soma5 + tet.getQuantidade();                                
+                            }
+                            for(Itempedido tet : produto7) { 
+                                soma6 = soma6 + tet.getQuantidade();                                
+                            }
+                            for(Itempedido tet : produto8) { 
+                                soma7 = soma7 + tet.getQuantidade();                                
+                            }
                           
+                        
+                            
                         String datafor2 = formato.format(calFinal.getTime());
                         
                         testelista.add(soma);
-                        
+                        testelista1.add(som1);
+                        testelista8.add(soma2);
+                        testelista3.add(soma3);
+                        testelista4.add(soma4);
+                        testelista5.add(soma5);
+                        testelista6.add(soma6);
+                        testelista7.add(soma7);
                         
                         firstD = finalD2;
-                        soma = 0;
+                        soma = 0; som1 = 0; soma2= 0; soma3 = 0; soma4 = 0; 
+                        soma5 = 0; soma6 = 0; soma7 = 0;
                         
                  
                 }
-                
-               /* request.setAttribute("tes", testelista);
-                request.getAttribute("tes"); 
-                request.setAttribute("tes2", testelista2);
-                request.getAttribute("tes2"); */
+               
             
             
             } catch (ParseException ex) {
@@ -1179,23 +1204,43 @@ private AcessoDao acDao;*/
            
             for (int i = 0; i < testelista.size(); i++) {
                 
-                 
                 int dadosentrada = (int) testelista.get(i);
-                dataset.addValue(dadosentrada, "Produto 1", "Dia" + j); 
+                dataset.addValue(dadosentrada, "Awaken", "" + testelista2.get(i)); 
+                
+                int dadosentrada1 = (int) testelista1.get(i);
+                dataset.addValue(dadosentrada1, "Black Pumas","" + testelista2.get(i));
+                
+                int dadosentrada2 = (int) testelista8.get(i);
+                dataset.addValue(dadosentrada2, "Alucinação", "" + testelista2.get(i)); 
+                
+                int dadosentrad = (int) testelista3.get(i);
+                dataset.addValue(dadosentrad, "Cartola 1976","" + testelista2.get(i));
+                
+                int dadosentra = (int) testelista4.get(i);
+                dataset.addValue(dadosentra, "Butterfly", "" + testelista2.get(i)); 
+                
+                int dadosentrada5 = (int) testelista5.get(i);
+                dataset.addValue(dadosentrada5, "Legend","" + testelista2.get(i));
+                
+                int dadosentrada6 = (int) testelista6.get(i);
+                dataset.addValue(dadosentrada6, "Novos Baianos", "" + testelista2.get(i)); 
+                
+                int dadosentrada7 = (int) testelista7.get(i);
+                dataset.addValue(dadosentrada7, "Miles Davis","" + testelista2.get(i));
+                
                 j = j + 1;
             }
+           
             
             
-            //dataset.addValue(6, "Produto 2", "Dia 1");
-            //dataset.addValue(9, "Produto 3", "Dia 1");
             
             
-            //JFreeChart cha = ChartFactory.createBarChart("Grafico Teste", "Dias Contados", "Quantidad del Productos", dataset, PlotOrientation.VERTICAL, true, true, false);
-            JFreeChart cha1 = ChartFactory.createLineChart("Grafico de Vendas à partir de " + dataInicio , "Produtos", "Quantidad", dataset, PlotOrientation.VERTICAL, true, true, true);
+            
+            JFreeChart cha1 = ChartFactory.createLineChart("Grafico de Vendas à partir de " + dataInicio + " até o dia " + dataFim, "Produtos", "Quantidade de Produtos Vendidos", dataset, PlotOrientation.VERTICAL, true, true, true);
             
             
-            int baixo = 600;
-            int alto = 750;
+            int baixo = 800;
+            int alto = 1250;
             
             ChartUtilities.writeChartAsPNG(out, cha1, alto, baixo);
             //ChartUtilities.writeChartAsPNG(out, cha1, alto, baixo);
