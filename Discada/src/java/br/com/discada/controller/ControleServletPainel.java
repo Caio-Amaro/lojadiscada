@@ -60,9 +60,9 @@ import org.jfree.data.category.DefaultCategoryDataset;
                    "/relatorioVendaProduto", "/relatorioVendaData", "/editarCupom", "/consultaNomeCliente",
                    "/controlePedidos", "/editarCategoria", "/adicionarCupomProm", "/consultaNomeProduto",
                    "/detalheClientes", "/editarProduto", "/adicionarCupomTroca", "/pesquisaVendasMes",
-                   "/relatorioVendaCategoria", "/adicionarCategoria", "/editarItemPedido",
+                   "/relatorioVendaCategoria", "/adicionarCategoria", "/editarItemPedido", "/pesquisaVendasMesValor",
                    "/controleClientes", "/controleEstoque", "/adicionarProduto", "/pesquisaVendasBean",
-                   "/Painel", "/loginAdm", "/addPostagem", "/pesquisaVendas"})
+                   "/Painel", "/loginAdm", "/addPostagem", "/pesquisaVendas", "/pesquisaVendasBeanValor"})
 
         
 public class ControleServletPainel extends HttpServlet {
@@ -102,9 +102,11 @@ private AcessoDao acDao;*/
          HttpSession session = request.getSession();
          
         
-        if(userPath.equals("/relatorioVendasGeral")){
+        if(userPath.equals("/pesquisaVendasMes")){
             
-            request.getAttribute("pedo");
+          List<Produto> product = (List<Produto>) proDao.getListaObjetos();
+          request.setAttribute("produtoscom", product);
+          request.getAttribute("produtoscom");
             
           
         }
@@ -330,7 +332,9 @@ private AcessoDao acDao;*/
         
         else if (userPath.equals ("/Painel")){
             
-            
+            List<Produto> product = (List<Produto>) proDao.getListaObjetos();
+            request.setAttribute("produtoscom", product);
+            request.getAttribute("produtoscom");
         } 
            
  // ----------------------------------------------------------------------
@@ -394,10 +398,8 @@ private AcessoDao acDao;*/
         
     }
     
-    // ----------------------------------------------------------------------
-  
-    
-    // ----------------------------------------------------------------------
+// ----------------------------------------------------------------------
+// ----------------------------------------------------------------------
     
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -1182,11 +1184,8 @@ private AcessoDao acDao;*/
                         firstD = finalD2;
                         soma = 0; som1 = 0; soma2= 0; soma3 = 0; soma4 = 0; 
                         soma5 = 0; soma6 = 0; soma7 = 0;
-                        
-                 
+                  
                 }
-               
-            
             
             } catch (ParseException ex) {
                 Logger.getLogger(ControleServletPainel.class.getName()).log(Level.SEVERE, null, ex);
@@ -1231,26 +1230,486 @@ private AcessoDao acDao;*/
                 j = j + 1;
             }
            
-            
-            
-            
-            
-            
-            JFreeChart cha1 = ChartFactory.createLineChart("Grafico de Vendas à partir de " + dataInicio + " até o dia " + dataFim, "Produtos", "Quantidade de Produtos Vendidos", dataset, PlotOrientation.VERTICAL, true, true, true);
+            JFreeChart cha1 = ChartFactory.createLineChart("Grafico de Vendas à partir de " + dataInicio + " até o dia " + dataFim, "PRODUTOS ANALISADOS ABAIXO || Para Retornar use : Alt + <- ", "Quantidade de Produtos Vendidos", dataset, PlotOrientation.VERTICAL, true, true, true);
             
             
             int baixo = 800;
             int alto = 1250;
             
             ChartUtilities.writeChartAsPNG(out, cha1, alto, baixo);
-            //ChartUtilities.writeChartAsPNG(out, cha1, alto, baixo);
-            //ChartUtilities.writeChartAsPNG(out, cha1, alto, baixo);
+            
             
             }  
-        } 
+        }
+
+// -------------------------------------------------------------------------------------------------------------------------
         
- // ------------------------------------------------------------------
+        else if (userPath.equals("/pesquisaVendasMesValor")){
+            
+          
+           SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+                     
+           String dataInicio = request.getParameter("datainicial");
+           String dataFim = request.getParameter("datafinal");
+           int dife = 0;
+           
+           
+            try {
+                
+                Date firstDt = formato.parse(dataInicio);
+                Date finalDt = formato.parse(dataFim);
+                
+                long difer  = Math.abs(finalDt.getTime() - firstDt.getTime());
+                
+                
+                long differTw = TimeUnit.DAYS.convert(difer, TimeUnit.MILLISECONDS);
+                dife = (int)differTw;
+                request.setAttribute("dtini", dife);
+                request.getAttribute("dtini");
+                
+                
+            } catch (ParseException ex) {
+                Logger.getLogger(ControleServletPainel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+                
+                
+                List testelista = new ArrayList();
+                List testelista1 = new ArrayList();                
+                List testelista2 = new ArrayList();
+                List testelista3 = new ArrayList();
+                List testelista4 = new ArrayList();
+                List testelista5 = new ArrayList();
+                List testelista6 = new ArrayList();
+                List testelista7 = new ArrayList();
+                List testelista8 = new ArrayList();
+                
+                int soma = 0, som1 = 0, soma2=0, 
+                        soma3=0, soma4=0, soma5=0, soma6=0, soma7=0;                 
+                
+            try {
+                Date firstD;
+                Date finalD2;
+                firstD = formato.parse(dataInicio);
+                finalD2 = formato.parse(dataFim);
+                
+                
+                Calendar cal = Calendar.getInstance();
+                Calendar calFinal = Calendar.getInstance();
+                
+                for (int i = 0; i <= dife; i++ ) {
+                    
+                                                
+                        finalD2 = firstD;
+                        
+                        cal.setTime(firstD);
+                        //String datafor = formato.format(calFinal.getTime());
+                         
+                        
+                        cal.add(Calendar.DAY_OF_MONTH, i);
+                        
+                        
+                        calFinal.setTime(finalD2);
+                        calFinal.add(Calendar.DAY_OF_MONTH, i+1);
+                        String datafor = formato.format(cal.getTime());
+                        testelista2.add(datafor);
+                        
+                        List<Itempedido> produto1 = null;
+                        List<Itempedido> produto2 = null;
+                        List<Itempedido> produto3 = null;
+                        List<Itempedido> produto4 = null;
+                        List<Itempedido> produto5 = null;
+                        List<Itempedido> produto6 = null;
+                        List<Itempedido> produto7 = null;
+                        List<Itempedido> produto8 = null;
+                        
+                        
+                        
+                        produto1 = (List<Itempedido>) itemDao.listarPorDataCategoria(cal.getTime(), calFinal.getTime(), 1);
+                        produto2 = (List<Itempedido>) itemDao.listarPorDataCategoria(cal.getTime(), calFinal.getTime(), 2);
+                        produto3 = (List<Itempedido>) itemDao.listarPorDataCategoria(cal.getTime(), calFinal.getTime(), 3);
+                        produto4 = (List<Itempedido>) itemDao.listarPorDataCategoria(cal.getTime(), calFinal.getTime(), 4);
+                        produto5 = (List<Itempedido>) itemDao.listarPorDataCategoria(cal.getTime(), calFinal.getTime(), 5);
+                        produto6 = (List<Itempedido>) itemDao.listarPorDataCategoria(cal.getTime(), calFinal.getTime(), 6);
+                        produto7 = (List<Itempedido>) itemDao.listarPorDataCategoria(cal.getTime(), calFinal.getTime(), 7);
+                        produto8 = (List<Itempedido>) itemDao.listarPorDataCategoria(cal.getTime(), calFinal.getTime(), 8);
+                        
+                            for(Itempedido tet : produto1) { 
+                                soma = (int) (soma + tet.getValortotalitem());                                
+                            }
+                            for(Itempedido tet : produto2) { 
+                                som1 = (int) (som1 + tet.getValortotalitem());                                
+                            }
+                            for(Itempedido tet : produto3) { 
+                                soma2 = (int) (soma2 + tet.getValortotalitem());                                
+                            }
+                            for(Itempedido tet : produto4) { 
+                                soma3 = (int) (soma3 + tet.getValortotalitem());                                
+                            }
+                            for(Itempedido tet : produto5) { 
+                                soma4 = (int) (soma4 + tet.getValortotalitem());                                
+                            }
+                            for(Itempedido tet : produto6) { 
+                                soma5 = (int) (soma5 + tet.getValortotalitem());                                
+                            }
+                            for(Itempedido tet : produto7) { 
+                                soma6 = (int) (soma6 + tet.getValortotalitem());                                
+                            }
+                            for(Itempedido tet : produto8) { 
+                                soma7 = (int) (soma7 + tet.getValortotalitem());                                
+                            }
+                          
+                        
+                            
+                        String datafor2 = formato.format(calFinal.getTime());
+                        
+                        testelista.add(soma);
+                        testelista1.add(som1);
+                        testelista8.add(soma2);
+                        testelista3.add(soma3);
+                        testelista4.add(soma4);
+                        testelista5.add(soma5);
+                        testelista6.add(soma6);
+                        testelista7.add(soma7);
+                        
+                        firstD = finalD2;
+                        soma = 0; som1 = 0; soma2= 0; soma3 = 0; soma4 = 0; 
+                        soma5 = 0; soma6 = 0; soma7 = 0;
+                  
+                }
+            
+            } catch (ParseException ex) {
+                Logger.getLogger(ControleServletPainel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            
+            String defe = request.getParameter("defe");            
+            
+            if (defe != null && !defe.equals("")){
+            int j = 1;    
+            response.setContentType("image/PNG");
+            OutputStream out = response.getOutputStream();
+            
+            DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+           
+            for (int i = 0; i < testelista.size(); i++) {
+                
+                int dadosentrada = (int) testelista.get(i);
+                dataset.addValue(dadosentrada, "Awaken", "" + testelista2.get(i)); 
+                
+                int dadosentrada1 = (int) testelista1.get(i);
+                dataset.addValue(dadosentrada1, "Black Pumas","" + testelista2.get(i));
+                
+                int dadosentrada2 = (int) testelista8.get(i);
+                dataset.addValue(dadosentrada2, "Alucinação", "" + testelista2.get(i)); 
+                
+                int dadosentrad = (int) testelista3.get(i);
+                dataset.addValue(dadosentrad, "Cartola 1976","" + testelista2.get(i));
+                
+                int dadosentra = (int) testelista4.get(i);
+                dataset.addValue(dadosentra, "Butterfly", "" + testelista2.get(i)); 
+                
+                int dadosentrada5 = (int) testelista5.get(i);
+                dataset.addValue(dadosentrada5, "Legend","" + testelista2.get(i));
+                
+                int dadosentrada6 = (int) testelista6.get(i);
+                dataset.addValue(dadosentrada6, "Novos Baianos", "" + testelista2.get(i)); 
+                
+                int dadosentrada7 = (int) testelista7.get(i);
+                dataset.addValue(dadosentrada7, "Miles Davis","" + testelista2.get(i));
+                
+                j = j + 1;
+            }
+           
+            JFreeChart cha1 = ChartFactory.createLineChart("Grafico de Vendas à partir de " + dataInicio + " até o dia " + dataFim, "PRODUTOS ANALISADOS ABAIXO || Para Retornar use : Alt + <- ", "Volume em R$ de Produtos Vendidos", dataset, PlotOrientation.VERTICAL, true, true, true);
+            
+            
+            int baixo = 800;
+            int alto = 1250;
+            
+            ChartUtilities.writeChartAsPNG(out, cha1, alto, baixo);
+            
+            
+            }  
+        }
+
+// --------------------------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------------------------------
         
+        else if (userPath.equals("/pesquisaVendasBean")){
+            
+            
+           SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+           
+           String produt1 = request.getParameter("produt1");
+           String produt2 = request.getParameter("produt2");
+           String dataInicio = request.getParameter("datainicial");
+           String dataFim = request.getParameter("datafinal");
+           int dife = 0;
+           
+           
+            try {
+                
+                Date firstDt = formato.parse(dataInicio);
+                Date finalDt = formato.parse(dataFim);
+                
+                long difer  = Math.abs(finalDt.getTime() - firstDt.getTime());
+                
+                
+                long differTw = TimeUnit.DAYS.convert(difer, TimeUnit.MILLISECONDS);
+                dife = (int)differTw;
+                request.setAttribute("dtini", dife);
+                request.getAttribute("dtini");
+                
+                
+            } catch (ParseException ex) {
+                Logger.getLogger(ControleServletPainel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+                
+                
+                List testelista = new ArrayList();
+                List testelista1 = new ArrayList();                
+                List testelista2 = new ArrayList();
+                
+                
+                int soma = 0, som1 = 0;                
+                
+            try {
+                Date firstD;
+                Date finalD2;
+                firstD = formato.parse(dataInicio);
+                finalD2 = formato.parse(dataFim);
+                
+                
+                Calendar cal = Calendar.getInstance();
+                Calendar calFinal = Calendar.getInstance();
+                
+                for (int i = 0; i <= dife; i++ ) {
+                    
+                                                
+                        finalD2 = firstD;
+                        
+                        cal.setTime(firstD);
+                        //String datafor = formato.format(calFinal.getTime());
+                         
+                        
+                        cal.add(Calendar.DAY_OF_MONTH, i);
+                        
+                        
+                        calFinal.setTime(finalD2);
+                        calFinal.add(Calendar.DAY_OF_MONTH, i+1);
+                        String datafor = formato.format(cal.getTime());
+                        testelista2.add(datafor);
+                        
+                        List<Itempedido> produto1 = null;
+                        List<Itempedido> produto2 = null;
+                        
+                       int produ1 = Integer.parseInt(produt1);
+                       int produ2 = Integer.parseInt(produt2);
+                        
+                        produto1 = (List<Itempedido>) itemDao.listarPorDataCategoria(cal.getTime(), calFinal.getTime(), produ1);
+                        produto2 = (List<Itempedido>) itemDao.listarPorDataCategoria(cal.getTime(), calFinal.getTime(), produ2);
+                        
+                        
+                            for(Itempedido tet : produto1) { 
+                                soma = soma + tet.getQuantidade();                                
+                            }
+                            for(Itempedido tet : produto2) { 
+                                som1 = som1 + tet.getQuantidade();                                
+                            }
+                            
+                           
+                        
+                            
+                        String datafor2 = formato.format(calFinal.getTime());
+                        
+                        testelista.add(soma);
+                        testelista1.add(som1);
+                        
+                        
+                        firstD = finalD2;
+                        soma = 0; som1 = 0; 
+                  
+                }
+            
+            } catch (ParseException ex) {
+                Logger.getLogger(ControleServletPainel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            
+            String defe = request.getParameter("defe");            
+            
+            if (defe != null && !defe.equals("")){
+            int j = 1;    
+            response.setContentType("image/PNG");
+            OutputStream out = response.getOutputStream();
+            
+            DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+           
+            for (int i = 0; i < testelista.size(); i++) {
+                
+                int dadosentrada = (int) testelista.get(i);
+                dataset.addValue(dadosentrada, "Awaken", "" + testelista2.get(i)); 
+                
+                int dadosentrada1 = (int) testelista1.get(i);
+                dataset.addValue(dadosentrada1, "Black Pumas","" + testelista2.get(i));
+                
+                                
+                j = j + 1;
+            }
+           
+            JFreeChart cha1 = ChartFactory.createLineChart("Grafico de Vendas à partir de " + dataInicio + " até o dia " + dataFim, "PRODUTOS ANALISADOS ABAIXO || Para Retornar use : Alt + <- ", "Quantidade de Produtos Vendidos", dataset, PlotOrientation.VERTICAL, true, true, true);
+            
+            
+            int baixo = 800;
+            int alto = 1250;
+            
+            ChartUtilities.writeChartAsPNG(out, cha1, alto, baixo);
+            
+            
+            }  
+            
+            
+        }
+        
+  // --------------------------------------------------------------------------------------------------------------------
+        
+        else if (userPath.equals("/pesquisaVendasBeanValor")){
+            
+            
+           SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+           
+           String produt1 = request.getParameter("produt1");
+           String produt2 = request.getParameter("produt2");
+           String dataInicio = request.getParameter("datainicial");
+           String dataFim = request.getParameter("datafinal");
+           int dife = 0;
+           
+           
+            try {
+                
+                Date firstDt = formato.parse(dataInicio);
+                Date finalDt = formato.parse(dataFim);
+                
+                long difer  = Math.abs(finalDt.getTime() - firstDt.getTime());
+                
+                
+                long differTw = TimeUnit.DAYS.convert(difer, TimeUnit.MILLISECONDS);
+                dife = (int)differTw;
+                request.setAttribute("dtini", dife);
+                request.getAttribute("dtini");
+                
+                
+            } catch (ParseException ex) {
+                Logger.getLogger(ControleServletPainel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+                
+                
+                List testelista = new ArrayList();
+                List testelista1 = new ArrayList();                
+                List testelista2 = new ArrayList();
+                
+                
+                int soma = 0, som1 = 0;                
+                
+            try {
+                Date firstD;
+                Date finalD2;
+                firstD = formato.parse(dataInicio);
+                finalD2 = formato.parse(dataFim);
+                
+                
+                Calendar cal = Calendar.getInstance();
+                Calendar calFinal = Calendar.getInstance();
+                
+                for (int i = 0; i <= dife; i++ ) {
+                    
+                                                
+                        finalD2 = firstD;
+                        
+                        cal.setTime(firstD);
+                        //String datafor = formato.format(calFinal.getTime());
+                         
+                        
+                        cal.add(Calendar.DAY_OF_MONTH, i);
+                        
+                        
+                        calFinal.setTime(finalD2);
+                        calFinal.add(Calendar.DAY_OF_MONTH, i+1);
+                        String datafor = formato.format(cal.getTime());
+                        testelista2.add(datafor);
+                        
+                        List<Itempedido> produto1 = null;
+                        List<Itempedido> produto2 = null;
+                        
+                       int produ1 = Integer.parseInt(produt1);
+                       int produ2 = Integer.parseInt(produt2);
+                        
+                        produto1 = (List<Itempedido>) itemDao.listarPorDataCategoria(cal.getTime(), calFinal.getTime(), produ1);
+                        produto2 = (List<Itempedido>) itemDao.listarPorDataCategoria(cal.getTime(), calFinal.getTime(), produ2);
+                        
+                        
+                            for(Itempedido tet : produto1) { 
+                                soma = (int) (soma + tet.getValoritem());                                
+                            }
+                            for(Itempedido tet : produto2) { 
+                                som1 = (int) (soma + tet.getValoritem());                                  
+                            }
+                            
+                           
+                        
+                            
+                        String datafor2 = formato.format(calFinal.getTime());
+                        
+                        testelista.add(soma);
+                        testelista1.add(som1);
+                        
+                        
+                        firstD = finalD2;
+                        soma = 0; som1 = 0; 
+                  
+                }
+            
+            } catch (ParseException ex) {
+                Logger.getLogger(ControleServletPainel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            
+            String defe = request.getParameter("defe");            
+            
+            if (defe != null && !defe.equals("")){
+            int j = 1;    
+            response.setContentType("image/PNG");
+            OutputStream out = response.getOutputStream();
+            
+            DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+           
+            for (int i = 0; i < testelista.size(); i++) {
+                
+                int dadosentrada = (int) testelista.get(i);
+                dataset.addValue(dadosentrada, "Awaken", "" + testelista2.get(i)); 
+                
+                int dadosentrada1 = (int) testelista1.get(i);
+                dataset.addValue(dadosentrada1, "Black Pumas","" + testelista2.get(i));
+                
+                                
+                j = j + 1;
+            }
+           
+            JFreeChart cha1 = ChartFactory.createLineChart("Grafico de Vendas à partir de " + dataInicio + " até o dia " + dataFim, "PRODUTOS ANALISADOS ABAIXO || Para Retornar use : Alt + <- ", "Volume em R$ de Produtos Vendidos", dataset, PlotOrientation.VERTICAL, true, true, true);
+            
+            
+            int baixo = 800;
+            int alto = 1250;
+            
+            ChartUtilities.writeChartAsPNG(out, cha1, alto, baixo);
+            
+            
+            }  
+            
+            
+        }
+        
+ // -----------------------------------------------------------------------------------------------------------------       
         else if (userPath.equals ("/Painel")){
             
             
@@ -1259,9 +1718,11 @@ private AcessoDao acDao;*/
     
            SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
                      
-             
+            String prod = request.getParameter("produt1");
+            String prod2 = request.getParameter("produt2");
             String dataInicio = request.getParameter("datainicial");
             String dataFim = request.getParameter("datafinal");
+            
             
             if(dataInicio != null && !dataInicio.isEmpty()){
 
@@ -1269,27 +1730,37 @@ private AcessoDao acDao;*/
                     //int dias = Days.daysBetween(dataInicio, dataFim).getDays();
                     Date firstDt = formato.parse(dataInicio);
                     Date finalDt = formato.parse(dataFim);
+                    
+                    int pro = Integer.parseInt(prod);
+                    int pro2 = Integer.parseInt(prod2);
 
                     MontaGrafico novoGrafico = new MontaGrafico();
                     MontaGrafico novoGrafico2 = new MontaGrafico();
 
 
-                    novoGrafico = (MontaGrafico) itemDao.listarPorDataProduto(firstDt, finalDt, 1);                                               
-                    novoGrafico2 = (MontaGrafico) itemDao.listarPorDataProduto(firstDt, finalDt, 2);                                               
+                    novoGrafico = (MontaGrafico) itemDao.listarPorDataProduto(firstDt, finalDt, pro);                                               
+                    novoGrafico2 = (MontaGrafico) itemDao.listarPorDataProduto(firstDt, finalDt, pro2);                                               
                     
                     
-                    request.setAttribute("testeUm", novoGrafico.getNomepr());
-                    request.getAttribute("testeUm");
+                    request.setAttribute("npro1", novoGrafico.getNomepr());
+                    request.getAttribute("npro1");
                     
-                    request.setAttribute("testeDois", novoGrafico.getSomqtd());
-                    request.getAttribute("testeDois");
+                    request.setAttribute("spro1", novoGrafico.getSomqtd());
+                    request.getAttribute("spro1");
                     
-                     request.setAttribute("testeTres", novoGrafico.getSomvlr());
-                    request.getAttribute("testeTres");
+                    request.setAttribute("vpro1", novoGrafico.getSomvlr());
+                    request.getAttribute("vpro1");
+                    
+                    request.setAttribute("npro2", novoGrafico2.getNomepr());
+                    request.getAttribute("npro2");
+                    
+                    request.setAttribute("spro2", novoGrafico2.getSomqtd());
+                    request.getAttribute("spro2");
+                    
+                    request.setAttribute("vpro2", novoGrafico2.getSomvlr());
+                    request.getAttribute("vpro2");
                 
-                    novoGrafico.getSomqtd();
-                
-                
+                  
                 
                 /*request.setAttribute("prodOne", json2);
                 request.getAttribute("prodOne");

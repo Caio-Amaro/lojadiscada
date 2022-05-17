@@ -3,10 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Caio/Loja%20Discada/Discada/web/WEB-INF/jspf/footer.jspf</file>
             <file>file:/C:/Caio/Loja%20Discada/Discada/web/WEB-INF/viewsPainel/Painel.jsp</file>
+            <file>file:/C:/Caio/Loja%20Discada/Discada/src/java/br/com/discada/services/servicoValida.java</file>
+            <file>file:/C:/Caio/Loja%20Discada/Discada/web/WEB-INF/viewsPainel/pesquisaVendasMes.jsp</file>
             <file>file:/C:/Caio/Loja%20Discada/Discada/src/java/br/com/discada/services/MontaGrafico.java</file>
-            <file>file:/C:/Caio/Loja%20Discada/Discada/web/WEB-INF/jspf/header.jspf</file>
+            <file>file:/C:/Caio/Loja%20Discada/Discada/src/java/br/com/discada/model/jpa/Itempedido.java</file>
             <file>file:/C:/Caio/Loja%20Discada/Discada/src/java/br/com/discada/controller/ControleServletPainel.java</file>
         </group>
     </open-files>

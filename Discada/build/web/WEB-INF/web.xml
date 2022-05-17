@@ -47,6 +47,7 @@
         <url-pattern>/editarItemPedido</url-pattern>
         <url-pattern>/error</url-pattern>
         <url-pattern>/relatorioVendaProduto</url-pattern>
+        <url-pattern>/pesquisaVendasBeanValor</url-pattern>
         <url-pattern>/relatorioVendasGeral</url-pattern>
         <url-pattern>/controlePedidos</url-pattern>
         <url-pattern>/pesquisaVendasBean</url-pattern>
@@ -61,6 +62,7 @@
         <url-pattern>/pesquisaVendasMes</url-pattern>
         <url-pattern>/adicionarCupomTroca</url-pattern>
         <url-pattern>/editarCupom</url-pattern>
+        <url-pattern>/pesquisaVendasMesValor</url-pattern>
         <url-pattern>/adicionarCupomPromo</url-pattern>
         <url-pattern>/adicionarProduto</url-pattern>
         <url-pattern>/adicionarCategoria</url-pattern>
