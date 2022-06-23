@@ -1,6 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-<%@page import="java.io.*, javax.imageio.*, java.awt.image.*, javax.servlet.*, javax.servlet.http.*,org.jfree.chart.*, org.jfree.chart.plot.*, org.jfree.data.category.*"%>
+
         <!-- Teste Gráfico JS -->
     <%--<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.5.1/chart.min.js"></script>--%>
  
@@ -48,9 +48,9 @@
                  </div>
              </div>
         </section>
-    </div>
+    
     <br>
-        <div class="row">
+    <div class="row" style="padding: 1em;">
             <form class="form-inline"  action="${pageContext.request.contextPath}/Painel" method="POST">                
                 <div class="row">
                     <div class="col-6">
@@ -87,22 +87,36 @@
              </form>                
         </div>
             
-        <section>
-            <div class="row">
-                <div col-12>
-                    <div col-6>
-                        <h6>Produto : ${npro1}</h6>
-                        <h6>Quantidade : ${spro1}</h6>
-                        <h6>Valor : ${vpro1}</h6>
+        <section class="container">            
+                <div class="col-12">
+                    <div  class="row">
+                    <div class="card" style="width: 30%; text-align: center; margin-left: 1em;" id="blockProductDois">
+                        <div class="card-body">
+                            
+                               <div class="mb-4">
+                                   <h5 id="sloganUm"> ${npro1}</h5>                                   
+                                   <h6 style="color: #3C3D59; font-family: fantasy;">Quantidade :</h6> <strong> ${spro1} </strong>
+                                   <h6 style="color: #3C3D59; font-family: fantasy;">Valor R$ </h6> <strong> ${vpro1} </strong>
+                               </div>
+                            
+                        </div>
                     </div>
-                    <div col-6>
-                        <h6>Produto : ${npro2}</h6>
-                        <h6>Quantidade : ${spro2}</h6>
-                        <h6>Valor : ${vpro2}</h6>
+            
+                    <div class="card" style="width: 30%; text-align: center; margin-left: 3em;" id="blockProductDois">
+                        <div class="card-body">
+                            
+                                <div class="mb-4">
+                                    <h5 id="sloganUm"> ${npro2} </h5>                                    
+                                    <h6 style="color: #3C3D59; font-family: fantasy;">Quantidade :</h6> <strong> ${spro2} </strong>  
+                                    <h6 style="color: #3C3D59; font-family: fantasy;">Valor R$ </h6> <strong> ${vpro2} </strong>   
+                                </div>                            
+                        </div>
                     </div>
-                </div>   
-            </div>        
+                    </div>
+                </div>
+                <p style=" margin-bottom: 5em;"></p>
         </section>
+    </div>    
 </body>
 
   

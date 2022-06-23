@@ -95,5 +95,12 @@
             <include-prelude>/WEB-INF/jspf/headerPanel.jspf</include-prelude>
             <include-coda>/WEB-INF/jspf/footerPanel.jspf</include-coda>
         </jsp-property-group>
+        <jsp-property-group>
+            <description>Grafico Final</description>
+            <url-pattern>/AnaliseChart.jsp</url-pattern>
+            <url-pattern>/WEB-INF/viewsGrafico/*</url-pattern>
+            <include-prelude>/WEB-INF/jspf/header.jspf</include-prelude>
+            <include-coda>/WEB-INF/jspf/footer.jspf</include-coda>
+        </jsp-property-group>
     </jsp-config>
 </web-app>

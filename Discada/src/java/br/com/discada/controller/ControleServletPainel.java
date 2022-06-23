@@ -21,6 +21,7 @@ import br.com.discada.model.jpa.Tipostatus;
 import br.com.discada.services.MontaGrafico;
 import br.com.discada.services.controleCupom;
 import com.keypoint.PngEncoder;
+import com.orsoncharts.label.StandardCategoryItemLabelGenerator;
 import com.sun.image.codec.jpeg.JPEGCodec;
 import com.sun.image.codec.jpeg.JPEGEncodeParam;
 import com.sun.image.codec.jpeg.JPEGImageEncoder;
@@ -31,6 +32,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import static java.lang.System.out;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -51,7 +53,9 @@ import javax.servlet.http.HttpSession;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.renderer.category.LineAndShapeRenderer;
 import org.jfree.data.category.DefaultCategoryDataset;
 
 @WebServlet(name = "ControleServletPainel", 
@@ -126,9 +130,8 @@ private AcessoDao acDao;*/
             
             
             }        
-// ------------------------------------------------------------------------------------------------        
-// ------------------------------------------------------------------
-        
+// ------------------------------------------------------------------------------------------------
+    
         else if (userPath.equals("/editarItemPedido")){
             
             session.getAttribute("iditem");
@@ -1232,9 +1235,22 @@ private AcessoDao acDao;*/
            
             JFreeChart cha1 = ChartFactory.createLineChart("Grafico de Vendas à partir de " + dataInicio + " até o dia " + dataFim, "PRODUTOS ANALISADOS ABAIXO || Para Retornar use : Alt + <- ", "Quantidade de Produtos Vendidos", dataset, PlotOrientation.VERTICAL, true, true, true);
             
-            
-            int baixo = 800;
-            int alto = 1250;
+            final CategoryPlot plot = cha1.getCategoryPlot();            
+            plot.setBackgroundPaint(Color.WHITE);
+            final LineAndShapeRenderer renderer = (LineAndShapeRenderer) plot.getRenderer();
+            renderer.setBaseShapesVisible(true);
+            renderer.setSeriesPaint(0, Color.DARK_GRAY);
+            renderer.setSeriesPaint(1, Color.MAGENTA);
+            renderer.setSeriesPaint(2, Color.ORANGE);
+            renderer.setSeriesPaint(3, Color.RED);
+            renderer.setSeriesPaint(4, Color.GREEN);
+            renderer.setSeriesPaint(5, Color.BLUE);
+            renderer.setSeriesPaint(6, Color.CYAN);
+            renderer.setSeriesPaint(7, Color.BLACK);
+            renderer.setBaseItemLabelsVisible(true);
+          
+            int baixo = 900;
+            int alto = 1850;
             
             ChartUtilities.writeChartAsPNG(out, cha1, alto, baixo);
             
@@ -1422,9 +1438,22 @@ private AcessoDao acDao;*/
            
             JFreeChart cha1 = ChartFactory.createLineChart("Grafico de Vendas à partir de " + dataInicio + " até o dia " + dataFim, "PRODUTOS ANALISADOS ABAIXO || Para Retornar use : Alt + <- ", "Volume em R$ de Produtos Vendidos", dataset, PlotOrientation.VERTICAL, true, true, true);
             
-            
-            int baixo = 800;
-            int alto = 1250;
+            final CategoryPlot plot = cha1.getCategoryPlot();            
+            plot.setBackgroundPaint(Color.WHITE);
+            final LineAndShapeRenderer renderer = (LineAndShapeRenderer) plot.getRenderer();
+            renderer.setBaseShapesVisible(true);
+            renderer.setSeriesPaint(0, Color.DARK_GRAY);
+            renderer.setSeriesPaint(1, Color.MAGENTA);
+            renderer.setSeriesPaint(2, Color.ORANGE);
+            renderer.setSeriesPaint(3, Color.RED);
+            renderer.setSeriesPaint(4, Color.GREEN);
+            renderer.setSeriesPaint(5, Color.BLUE);
+            renderer.setSeriesPaint(6, Color.CYAN);
+            renderer.setSeriesPaint(7, Color.BLACK);
+            renderer.setBaseItemLabelsVisible(true);
+          
+            int baixo = 900;
+            int alto = 1850;
             
             ChartUtilities.writeChartAsPNG(out, cha1, alto, baixo);
             
@@ -1445,6 +1474,8 @@ private AcessoDao acDao;*/
            String dataInicio = request.getParameter("datainicial");
            String dataFim = request.getParameter("datafinal");
            int dife = 0;
+           String nome1 = "";
+           String nome2 = "";
            
            
             try {
@@ -1511,13 +1542,15 @@ private AcessoDao acDao;*/
                         
                         
                             for(Itempedido tet : produto1) { 
-                                soma = soma + tet.getQuantidade();                                
+                                soma = soma + tet.getQuantidade();
+                                nome1 = tet.getIdpro().getPronome();
                             }
                             for(Itempedido tet : produto2) { 
-                                som1 = som1 + tet.getQuantidade();                                
+                                som1 = som1 + tet.getQuantidade(); 
+                                nome2 = tet.getIdpro().getPronome();
                             }
                             
-                           
+                         
                         
                             
                         String datafor2 = formato.format(calFinal.getTime());
@@ -1540,6 +1573,7 @@ private AcessoDao acDao;*/
             
             if (defe != null && !defe.equals("")){
             int j = 1;    
+            
             response.setContentType("image/PNG");
             OutputStream out = response.getOutputStream();
             
@@ -1548,20 +1582,27 @@ private AcessoDao acDao;*/
             for (int i = 0; i < testelista.size(); i++) {
                 
                 int dadosentrada = (int) testelista.get(i);
-                dataset.addValue(dadosentrada, "Awaken", "" + testelista2.get(i)); 
+                dataset.addValue(dadosentrada, nome1, "" + testelista2.get(i)); 
                 
                 int dadosentrada1 = (int) testelista1.get(i);
-                dataset.addValue(dadosentrada1, "Black Pumas","" + testelista2.get(i));
+                dataset.addValue(dadosentrada1, nome2,"" + testelista2.get(i));
                 
                                 
                 j = j + 1;
             }
            
             JFreeChart cha1 = ChartFactory.createLineChart("Grafico de Vendas à partir de " + dataInicio + " até o dia " + dataFim, "PRODUTOS ANALISADOS ABAIXO || Para Retornar use : Alt + <- ", "Quantidade de Produtos Vendidos", dataset, PlotOrientation.VERTICAL, true, true, true);
-            
-            
-            int baixo = 800;
-            int alto = 1250;
+            final CategoryPlot plot = cha1.getCategoryPlot();            
+            plot.setBackgroundPaint(Color.WHITE);
+            final LineAndShapeRenderer renderer = (LineAndShapeRenderer) plot.getRenderer();
+            renderer.setBaseShapesVisible(true);
+            renderer.setSeriesPaint(0, Color.DARK_GRAY);
+            renderer.setSeriesPaint(1, Color.MAGENTA);            
+            renderer.setBaseItemLabelsVisible(true);
+          
+            int baixo = 900;
+            int alto = 1850;
+          
             
             ChartUtilities.writeChartAsPNG(out, cha1, alto, baixo);
             
@@ -1582,6 +1623,8 @@ private AcessoDao acDao;*/
            String produt2 = request.getParameter("produt2");
            String dataInicio = request.getParameter("datainicial");
            String dataFim = request.getParameter("datafinal");
+           String nome1 = "";
+           String nome2 = "";
            int dife = 0;
            
            
@@ -1649,10 +1692,12 @@ private AcessoDao acDao;*/
                         
                         
                             for(Itempedido tet : produto1) { 
-                                soma = (int) (soma + tet.getValoritem());                                
+                                soma = (int) (soma + tet.getValoritem());
+                                nome1 = tet.getIdpro().getPronome();
                             }
                             for(Itempedido tet : produto2) { 
-                                som1 = (int) (soma + tet.getValoritem());                                  
+                                som1 = (int) (soma + tet.getValoritem());
+                                nome2 = tet.getIdpro().getPronome();
                             }
                             
                            
@@ -1686,10 +1731,10 @@ private AcessoDao acDao;*/
             for (int i = 0; i < testelista.size(); i++) {
                 
                 int dadosentrada = (int) testelista.get(i);
-                dataset.addValue(dadosentrada, "Awaken", "" + testelista2.get(i)); 
+                dataset.addValue(dadosentrada, nome1, "" + testelista2.get(i)); 
                 
                 int dadosentrada1 = (int) testelista1.get(i);
-                dataset.addValue(dadosentrada1, "Black Pumas","" + testelista2.get(i));
+                dataset.addValue(dadosentrada1, nome2,"" + testelista2.get(i));
                 
                                 
                 j = j + 1;
@@ -1698,8 +1743,16 @@ private AcessoDao acDao;*/
             JFreeChart cha1 = ChartFactory.createLineChart("Grafico de Vendas à partir de " + dataInicio + " até o dia " + dataFim, "PRODUTOS ANALISADOS ABAIXO || Para Retornar use : Alt + <- ", "Volume em R$ de Produtos Vendidos", dataset, PlotOrientation.VERTICAL, true, true, true);
             
             
-            int baixo = 800;
-            int alto = 1250;
+            
+            final CategoryPlot plot = cha1.getCategoryPlot();            
+            plot.setBackgroundPaint(Color.WHITE);
+            final LineAndShapeRenderer renderer = (LineAndShapeRenderer) plot.getRenderer();
+            renderer.setBaseShapesVisible(true);
+            renderer.setSeriesPaint(0, Color.BLUE);
+            renderer.setSeriesPaint(1, Color.MAGENTA);            
+            renderer.setBaseItemLabelsVisible(true);
+            int baixo = 900;
+            int alto = 1850;
             
             ChartUtilities.writeChartAsPNG(out, cha1, alto, baixo);
             
@@ -1760,151 +1813,29 @@ private AcessoDao acDao;*/
                     request.setAttribute("vpro2", novoGrafico2.getSomvlr());
                     request.getAttribute("vpro2");
                 
-                  
-                
-                /*request.setAttribute("prodOne", json2);
-                request.getAttribute("prodOne");
-                /*request.setAttribute("prodOneUm", tett.getNomepr());
-                request.getAttribute("prodOneUm");
-                request.setAttribute("prodOneDois", tett.getSomvlr());
-                request.getAttribute("prodOneDois");
-                
-                tett = (MontaGrafico) itemDao.listarPorDataProduto(firstDt, finalDt, 3);                                               
-                request.setAttribute("prodTw", tett.getSomqtd());
-                request.getAttribute("prodTw");
-                request.setAttribute("prodTwOne", tett.getNomepr());
-                request.getAttribute("prodTwOne");
-                request.setAttribute("prodTwDois", tett.getSomvlr());
-                request.getAttribute("prodTwDois");*/
-                
-         
-                
-                
-                
-               
+                    List<Produto> product = (List<Produto>) proDao.getListaObjetos();
+                    request.setAttribute("produtoscom", product);
+                    request.getAttribute("produtoscom");
                 
                 } catch (ParseException ex) {
                 Logger.getLogger(ControleServletPainel.class.getName()).log(Level.SEVERE, null, ex);
                     }
-              
-            }       
-                userPath = "/Painel";  
-            
-            
-         /*             
-            
-            String defe = request.getParameter("defe");
-            
-            
-            if (defe != null && !defe.equals("")){
-                
-            response.setContentType("image/PNG");
-            OutputStream out = response.getOutputStream();
-            
-            DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-            
-            
-            
-            dataset.addValue(3, "Produto 1", "Dia 1");             
-            dataset.addValue(10, "Produto 1",  "Dia 2");
-            dataset.addValue(8, "Produto 1", "Dia 3");
-            
-            dataset.addValue(6, "Produto 2", "Dia 1");
-            dataset.addValue(1, "Produto 2",  "Dia 2");
-            dataset.addValue(4, "Produto 2", "Dia 3");
-            
-            dataset.addValue(9, "Produto 3", "Dia 1");
-            dataset.addValue(9, "Produto 3",  "Dia 2");
-            dataset.addValue(2, "Produto 3", "Dia 3");
-            
-            JFreeChart cha = ChartFactory.createBarChart("Grafico Teste", "Dias Contados", "Quantidad del Productos", dataset, PlotOrientation.VERTICAL, true, true, false);
-            JFreeChart cha1 = ChartFactory.createLineChart("Título", "Produtos", "Quantidad", dataset, PlotOrientation.VERTICAL, true, true, true);
-            
-            
-            int baixo = 600;
-            int alto = 750;
-            
-            ChartUtilities.writeChartAsPNG(out, cha1, alto, baixo);
-            ChartUtilities.writeChartAsPNG(out, cha1, alto, baixo);
-            ChartUtilities.writeChartAsPNG(out, cha1, alto, baixo);
-            
-            
-            }
-            
-    // Parte de baixo é a consulta no banco que utilizaremos depois que o gráfico funcionar
-    
-    
-           /* SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
-                     
              
-            String dataInicio = request.getParameter("datainicial");
-            String dataFim = request.getParameter("datafinal");
-            
-            request.setAttribute("prodOne", dataInicio);
-            request.getAttribute("prodOne");
-            
-            
-            if(dataInicio != null && !dataInicio.isEmpty()){
-
-                try {
-                    //int dias = Days.daysBetween(dataInicio, dataFim).getDays();
-                    Date firstDt = formato.parse(dataInicio);
-                    Date finalDt = formato.parse(dataFim);
-
-                    MontaGrafico novoGrafico = new MontaGrafico();
-                    MontaGrafico novoGrafico2 = new MontaGrafico();
-
-
-                    novoGrafico = (MontaGrafico) itemDao.listarPorDataProduto(firstDt, finalDt, 1);                                               
-                    novoGrafico2 = (MontaGrafico) itemDao.listarPorDataProduto(firstDt, finalDt, 2);                                               
-                    //ObjectMapper mapper = new ObjectMapper();
-                    
-                   //String json = mapper.writeValueAsString(novoGrafico);                    
-                    //response.getWriter().write(json);
-                    
-                    //request.setAttribute("testeUm", json);
-                    request.getAttribute("testeUm");
-                    
-                
-                novoGrafico.getSomqtd();
-                
-                
-                
-                /*request.setAttribute("prodOne", json2);
-                request.getAttribute("prodOne");
-                /*request.setAttribute("prodOneUm", tett.getNomepr());
-                request.getAttribute("prodOneUm");
-                request.setAttribute("prodOneDois", tett.getSomvlr());
-                request.getAttribute("prodOneDois");
-                
-                tett = (MontaGrafico) itemDao.listarPorDataProduto(firstDt, finalDt, 3);                                               
-                request.setAttribute("prodTw", tett.getSomqtd());
-                request.getAttribute("prodTw");
-                request.setAttribute("prodTwOne", tett.getNomepr());
-                request.getAttribute("prodTwOne");
-                request.setAttribute("prodTwDois", tett.getSomvlr());
-                request.getAttribute("prodTwDois");
-                
-         
-                
-                
-                
-               
-                
-                } catch (ParseException ex) {
-                Logger.getLogger(ControleServletPainel.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-              
             }       
-                userPath = "/Painel";  */ 
-            
-            
-           
+                
                
-        }     
-        
-        
+        }    
  // --------------------------------------------------------------------------//
+ 
+     else if (userPath.equals("/Analise")){
+          
+         
+            
+         
+            
+        }
+        
+ // -----------------------------------------------------------------------------------------------------------------       
         
  // --------------------------------------------------------------------------//
         

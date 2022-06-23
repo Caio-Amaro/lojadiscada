@@ -15,7 +15,7 @@
 
         <div style="text-align: center; margin-top: -1em;">
             <h5 id="sloganUm"> GERENCIADOR DE CARTÕES DE CRÉDITO </h5>
-            <p>Olá, ${cliente.clinome}. Inclua ou exclua cartões a qualquer momento na SoundEvo</p> 
+            
         </div>
 
         <div class="container">    
