@@ -14,23 +14,33 @@ import br.com.discada.model.jpa.Cartaocredi;
 import br.com.discada.model.jpa.Clientes;
 import br.com.discada.model.jpa.Cupom;
 import br.com.discada.model.jpa.Endereco;
+import br.com.discada.model.jpa.GraficoProdutos;
 import br.com.discada.model.jpa.Itempedido;
 import br.com.discada.model.jpa.Pedido;
 import br.com.discada.model.jpa.Produto;
 import br.com.discada.model.jpa.Segredo;
 import br.com.discada.model.jpa.Statuspostagem;
 import br.com.discada.model.jpa.Tipostatus;
+import br.com.discada.services.GerarGraficoMontado;
 import br.com.discada.services.ShoppingCart;
 import br.com.discada.services.ShoppingCartItem;
 import br.com.discada.services.controleCupom;
 import br.com.discada.services.servicoValida;
+import com.fasterxml.jackson.databind.cfg.MapperBuilder;
+import com.google.gson.Gson;
 import static com.sun.xml.bind.util.CalendarConv.formatter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.text.NumberFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
@@ -47,12 +57,12 @@ import javax.servlet.http.HttpSession;
  */
 @WebServlet(name = "ControleServlet",
         loadOnStartup = 1, 
-        urlPatterns = {"/update", "/enviarPedido", "/paginaCompraLista", "/excluirEndereco", "/cupomTroca",
+        urlPatterns = {"/update", "/enviarPedido", "/paginaCompraLista", "/excluirEndereco", "/cupomTroca", "/AnaliseChart",
             "/paginaFinaliza", "/addCart", "/addItem", "/paginaFormaPagamento", "/paginaProduto", "/paginaFinalizaDois",
             "/addAcesso", "/deslogar", "/paginaLogin", "/paginaHistoricopedido", "/editarEndereco", "/paginaAgradecimento",
             "/paginaEndereco", "/paginaDadosPessoais", "/cadastroCartao", "/paginaCupom", "/paginaDadosPessoaisSenha",
             "/paginaCartoes", "/gerenciaCliente", "/excluirCartao", "/cadastroP2", "/consultaProduto", "/detalheItemPedido",
-            "/cadastroP1", "/detalhePedido", "/consultaCategoria", "/paginaHistoricoNome"})
+            "/cadastroP1", "/detalhePedido", "/consultaCategoria", "/paginaHistoricoNome", "/chart"})
 
 public class ControleServlet extends HttpServlet {
     
@@ -83,6 +93,9 @@ public class ControleServlet extends HttpServlet {
     
     @EJB
     private CategoriaDao catDao;
+    
+    @EJB
+    private ItemPedidoDao itemDao;
     
     
   
@@ -143,8 +156,12 @@ public class ControleServlet extends HttpServlet {
                 
                 session.invalidate();
                 userPath = "/cadastroP2";
-            
             }
+//-------------------------------------------------------------------------------------
+
+           
+
+        
 // ------------------------------------------------------------------------------------
 // end point para gerar a listagem dos cartões cadastros ´pelo cliente
             
@@ -1366,6 +1383,131 @@ public class ControleServlet extends HttpServlet {
             request.getAttribute("pedit"); 
          
          }
+          
+//-------------------------------------------------------------------------------------
+
+            else if (userPath.equals("/AnaliseChart")){
+            
+                String dataInicial = request.getParameter("dataInicial");
+                String dataFinal = request.getParameter("dataFinal");
+                SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+           
+                String produt1 = "1";//request.getParameter("produt1");
+                String produt2 = "2";//request.getParameter("produt2");
+                String dataInicio = request.getParameter("dataInicial");
+                String dataFim = request.getParameter("dataFinal");
+                String nome1 = "";
+                String nome2 = "";
+                 int dife = 0;
+                
+
+                    try {
+
+                        Date firstDt = formato.parse(dataInicio);
+                        Date finalDt = formato.parse(dataFim);
+
+                        long difer  = Math.abs(finalDt.getTime() - firstDt.getTime());
+
+
+                        long differTw = TimeUnit.DAYS.convert(difer, TimeUnit.MILLISECONDS);
+                        dife = (int)differTw;
+                        request.setAttribute("dtini", dife);
+                        request.getAttribute("dtini");
+
+
+                    } catch (ParseException ex) {
+                        Logger.getLogger(ControleServletPainel.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
+
+                        List testelista = new ArrayList();
+                        List testelista1 = new ArrayList();                
+                        List testelista2 = new ArrayList();
+                        List listaProdutosGrafico = new ArrayList();
+
+
+                        int soma = 0, som1 = 0;                
+
+                    try {
+                        Date firstD;
+                        Date finalD2;
+                        firstD = formato.parse(dataInicio);
+                        finalD2 = formato.parse(dataFim);
+
+                        GraficoProdutos produtosGera = new GraficoProdutos();
+
+                        Calendar cal = Calendar.getInstance();
+                        Calendar calFinal = Calendar.getInstance();
+
+                        for (int i = 0; i <= dife; i++ ) {
+
+
+                                finalD2 = firstD;
+
+                                cal.setTime(firstD);
+                                //String datafor = formato.format(calFinal.getTime());
+
+
+                                cal.add(Calendar.DAY_OF_MONTH, i);
+
+
+                                calFinal.setTime(finalD2);
+                                calFinal.add(Calendar.DAY_OF_MONTH, i+1);
+                                String datafor = formato.format(cal.getTime());
+                                testelista2.add(datafor);
+
+                                List<Itempedido> produto1 = null;
+                                List<Itempedido> produto2 = null;
+
+                               int produ1 = Integer.parseInt(produt1);
+                               int produ2 = Integer.parseInt(produt2);
+
+                                produto1 = (List<Itempedido>) itemDao.listarPorDataCategoria(cal.getTime(), calFinal.getTime(), produ1);
+                                produto2 = (List<Itempedido>) itemDao.listarPorDataCategoria(cal.getTime(), calFinal.getTime(), produ2);
+
+
+                                    for(Itempedido tet : produto1) { 
+                                        soma = soma + tet.getQuantidade();
+                                        nome1 = tet.getIdpro().getPronome();
+                                    }
+                                    for(Itempedido tet : produto2) { 
+                                        som1 = som1 + tet.getQuantidade(); 
+                                        nome2 = tet.getIdpro().getPronome();
+                                    }
+
+
+                                String datafor2 = formato.format(calFinal.getTime());
+
+                                testelista.add(soma);
+                                testelista1.add(som1);
+
+                                listaProdutosGrafico.add(i+1);
+                                listaProdutosGrafico.add(soma);
+                                listaProdutosGrafico.add(som1);
+
+
+
+                                firstD = finalD2;
+                                soma = 0; som1 = 0; 
+
+                        }
+
+                        produtosGera.setLista(listaProdutosGrafico);
+
+                    } catch (ParseException ex) {
+                        Logger.getLogger(ControleServletPainel.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+            
+                 
+                 userPath = "/chart";
+
+            
+            
+            }
+
+
+        
+// ------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------------------------------
 // -----------------------------------------------------------------------------------------------            
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

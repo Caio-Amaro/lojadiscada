@@ -13,6 +13,7 @@ import br.com.discada.model.jpa.Categoria;
 import br.com.discada.model.jpa.Clientes;
 import br.com.discada.model.jpa.Cupom;
 import br.com.discada.model.jpa.Endereco;
+import br.com.discada.model.jpa.GraficoProdutos;
 import br.com.discada.model.jpa.Itempedido;
 import br.com.discada.model.jpa.Pedido;
 import br.com.discada.model.jpa.Produto;
@@ -1500,6 +1501,7 @@ private AcessoDao acDao;*/
                 List testelista = new ArrayList();
                 List testelista1 = new ArrayList();                
                 List testelista2 = new ArrayList();
+                List listaProdutosGrafico = new ArrayList();
                 
                 
                 int soma = 0, som1 = 0;                
@@ -1510,7 +1512,8 @@ private AcessoDao acDao;*/
                 firstD = formato.parse(dataInicio);
                 finalD2 = formato.parse(dataFim);
                 
-                
+                GraficoProdutos produtosGera = new GraficoProdutos();
+                        
                 Calendar cal = Calendar.getInstance();
                 Calendar calFinal = Calendar.getInstance();
                 
@@ -1550,19 +1553,24 @@ private AcessoDao acDao;*/
                                 nome2 = tet.getIdpro().getPronome();
                             }
                             
-                         
-                        
                             
                         String datafor2 = formato.format(calFinal.getTime());
                         
                         testelista.add(soma);
                         testelista1.add(som1);
                         
+                        listaProdutosGrafico.add(i+1);
+                        listaProdutosGrafico.add(soma);
+                        listaProdutosGrafico.add(som1);
+                        
+                        
                         
                         firstD = finalD2;
                         soma = 0; som1 = 0; 
                   
                 }
+                
+                produtosGera.setLista(listaProdutosGrafico);
             
             } catch (ParseException ex) {
                 Logger.getLogger(ControleServletPainel.class.getName()).log(Level.SEVERE, null, ex);
@@ -1679,7 +1687,7 @@ private AcessoDao acDao;*/
                         calFinal.setTime(finalD2);
                         calFinal.add(Calendar.DAY_OF_MONTH, i+1);
                         String datafor = formato.format(cal.getTime());
-                        testelista2.add(datafor);
+                        testelista2.add(datafor); // criando lista de datas
                         
                         List<Itempedido> produto1 = null;
                         List<Itempedido> produto2 = null;
@@ -1717,6 +1725,8 @@ private AcessoDao acDao;*/
             } catch (ParseException ex) {
                 Logger.getLogger(ControleServletPainel.class.getName()).log(Level.SEVERE, null, ex);
             }
+            
+          
             
             
             String defe = request.getParameter("defe");            

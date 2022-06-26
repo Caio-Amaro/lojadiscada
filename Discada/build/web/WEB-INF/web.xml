@@ -13,9 +13,14 @@
         <servlet-name>ControleServletPainel</servlet-name>
         <servlet-class>br.com.discada.controller.ControleServletPainel</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ChartServlet</servlet-name>
+        <servlet-class>br.com.discada.controller.ChartServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ControleServlet</servlet-name>
         <url-pattern>/addAcesso</url-pattern>
+        <url-pattern>/AnaliseChart</url-pattern>
         <url-pattern>/excluirCartao</url-pattern>
         <url-pattern>/paginaAgradecimento</url-pattern>
         <url-pattern>/addCart</url-pattern>
@@ -41,6 +46,7 @@
         <url-pattern>/paginaCartoes</url-pattern>
         <url-pattern>/paginaProduto</url-pattern>
         <url-pattern>/gerenciaCliente</url-pattern>
+        <url-pattern>/chart</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ControleServletPainel</servlet-name>
@@ -74,6 +80,11 @@
         <url-pattern>/consultaNomeCliente</url-pattern>
         <url-pattern>/detalheClientes</url-pattern>
         <url-pattern>/controleEstoque</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ChartServlet</servlet-name>
+        <url-pattern>/ChartServ</url-pattern>
+        <url-pattern>/chartDois</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

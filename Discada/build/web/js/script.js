@@ -1,3 +1,58 @@
+  
+ function myFunction(){
+     
+                
+        var urlAction = document.getElementById('formuser').action;
+        var dataInicial = document.getElementById('dataInicial').value;
+        var dataFinal = document.getElementById('dataFinal').value;
+      
+        $.ajax({
+            
+            method: "POST",
+            url: urlAction,
+            data: 'dataInicial=' + dataInicial + '&dataFinal=' + dataFinal,            
+            success: function( ) {
+                alert();
+                alert("OK" + dataInicial + "Ok2" + dataFinal + " - " + urlAction);
+            } 
+        /*}).fail(function(xhr, status, errorThrown){
+            alert('Erro ao buscar dados paras o gráfico' + xhr.responseText);*/
+        });
+        
+        const myChart = new Chart(
+            document.getElementById('myChart'),
+            {
+                type: 'line',
+                data: {
+                    labels: [
+                      'January',
+                      'February',
+                      'March',
+                      'April',
+                      'May',
+                      'June',
+                            ],
+                    datasets: [
+                        {
+                            label: 'Exemplo 1',
+                            backgroundColor: 'rgb(255, 99, 132)',
+                            borderColor: 'rgb(255, 99, 132)',
+                            data: [0, 10, 5, 2, 20, 30, 45],                    
+                        },
+                        {
+                            label: 'Exemplo 2',
+                            backgroundColor: 'rgb(55, 9, 132)',
+                            borderColor: 'rgb(55, 9, 132)',
+                            data: [20, 1, 25, 12, 2, 3, 35],                    
+                        }
+                    ]
+                    
+                },
+                options: {}
+            }
+        );
+    }
+ 
  // CAMADA DE PROGRAMAÇÃO FRONTEND JAVASCRIPT
 
 

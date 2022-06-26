@@ -1,26 +1,27 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<!DOCTYPE html>
+
 
 
     <body>       
         <div class="col-12 col-md-12">                        
             <div class="card" style="width: 100%; text-align: center;" id="blockProductDois">
                 <div class="card-body">
-                    <label id="sloganUm">TODOS OS PRODUTOS POR INTERVALO DE DATA E VALOR - MSG : ${mensa}</label>
-                    <form class="form-inline" id="formuser"  action="${pageContext.request.contextPath}/AnaliseChart" method="get">
+                    <label id="sloganUm">TODOS OS PRODUTOS POR INTERVALO DE DATA E VALOR - MSG : ${datateste}</label>
+                    <form class="form-inline" id="formuser"  action="${pageContext.request.contextPath}/AnaliseChart" method="post">
                         <div class="row">
                             <div class="col-6">
                                 <label class="sr-only" for="dataInicial" id="sloganUm">Data Inicial</label>
-                                <input value="${dataInicial}" id="dataInicial" type="text" name="dataInicial" class="form-control" placeholder="dia/mês/ano">
+                                <input id="dataInicial" type="text" name="dataInicial" class="form-control" placeholder="dia/mês/ano">
                             </div>
                             <div class="col-6">
                                 <label class="sr-only" for="dataInicial" id="sloganUm">Data Final</label>
-                                <input value="${dataFinal}" id="dataFinal" type="text" name="dataFinal" class="form-control" placeholder="dia/mês/ano">
+                                <input id="dataFinal" type="text" name="dataFinal" class="form-control" placeholder="dia/mês/ano">
                             </div>
 
                             <div style="margin-top: .5em;">                                
-                                <button onclick="myFunction()">GERAR GRÁFICO</button>
+                                <button onclick="" id="btSalvar" type="submit" value="Salvar">Gerar Grafico</button>
+                                
                             </div>
                         </div>
                     </form>
@@ -38,17 +39,15 @@
                 </div>
             </div>
          </div>
+    
         
     </body>
     
     <%-- <jsp:include page="scripts.js"></jsp:include> --%>
-    
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
-<script type="text/javascript">
-    
-    function myFunction(){
-        alert("chegou aqui");
+    <script>
+        function myFunctio(){
+     
+                
         var urlAction = document.getElementById('formuser').action;
         var dataInicial = document.getElementById('dataInicial').value;
         var dataFinal = document.getElementById('dataFinal').value;
@@ -56,13 +55,15 @@
         $.ajax({
             
             method: "get",
-            url : urlAction",
-            data : "dataInicial=" + dataInicial + '&dataFinal=' + dataFinal,
-            dataType: "json",
-            success : function(data) {
-                
-                alert("OK"));
-            }                    
+            url: urlAction,
+            data: 'dataInicial=' + dataInicial + '&dataFinal=' + dataFinal + '&acao=Teste',  
+            dataType: 'html',
+            success: function(response) {
+                alert(response);
+                alert("OK" + dataInicial + "Ok2" + dataFinal + " - " + urlAction);
+            } 
+        /*}).fail(function(xhr, status, errorThrown){
+            alert('Erro ao buscar dados paras o gráfico' + xhr.responseText);*/
         });
         
         const myChart = new Chart(
@@ -98,4 +99,11 @@
             }
         );
     }
-</script>  
+        
+    </script>
+    
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="js/jquery-3.6.0.min.js"></script>
+<%--<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>--%>
+<script src="js/script.js"></script>
+ 
