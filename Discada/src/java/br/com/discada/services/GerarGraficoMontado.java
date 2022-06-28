@@ -10,16 +10,18 @@ public class GerarGraficoMontado implements Serializable {
     private static final long serialVersionUID = 1L;       
     
     //private String nome;
+    private String nome;
     private int valor;
-    private int valor2;
-    private int dias; 
     
     
-    public GerarGraficoMontado(int dias, int valor, int valor2){
     
+    
+    public GerarGraficoMontado(String nome, int valor){
+        
+        this.nome = nome;
         this.valor = valor;
-        this.valor2 = valor2;
-        this.dias = dias;
+    
+        
         //this.nome = nome;
         
     }
@@ -40,30 +42,15 @@ public class GerarGraficoMontado implements Serializable {
         this.valor = valor;
     }
 
-    public int getDias() {
-        return dias;
-    }
-
-    public void setDias(int dias) {
-        this.dias = dias;
-    }
-
-   /* public String getName() {
+    public String getNome() {
         return nome;
     }
 
-    public void setName(String name) {
-        this.nome = name;
-    }*/
-
-    public int getValor2() {
-        return valor2;
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
-    public void setValor2(int valor2) {
-        this.valor2 = valor2;
-    }
-    
+   
     
     
 }

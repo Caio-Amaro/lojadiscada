@@ -84,7 +84,7 @@
     <servlet-mapping>
         <servlet-name>ChartServlet</servlet-name>
         <url-pattern>/ChartServ</url-pattern>
-        <url-pattern>/chartDois</url-pattern>
+               
     </servlet-mapping>
     <session-config>
         <session-timeout>

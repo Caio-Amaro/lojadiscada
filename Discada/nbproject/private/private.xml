@@ -4,11 +4,13 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/Caio/Loja%20Discada/Discada/src/java/br/com/discada/controller/ControleServlet.java</file>
+            <file>file:/C:/Caio/Loja%20Discada/Discada/nbproject/build-impl.xml</file>
             <file>file:/C:/Caio/Loja%20Discada/Discada/src/java/br/com/discada/services/GerarGraficoMontado.java</file>
             <file>file:/C:/Caio/Loja%20Discada/Discada/src/java/br/com/discada/controller/ChartServlet.java</file>
+            <file>file:/C:/Caio/Loja%20Discada/Discada/web/WEB-INF/web.xml</file>
             <file>file:/C:/Caio/Loja%20Discada/Discada/web/WEB-INF/views/AnaliseChart.jsp</file>
             <file>file:/C:/Caio/Loja%20Discada/Discada/web/WEB-INF/views/chart.jsp</file>
-            <file>file:/C:/Caio/Loja%20Discada/Discada/web/WEB-INF/jspf/header.jspf</file>
+            <file>file:/C:/Caio/Loja%20Discada/Discada/src/java/br/com/discada/model/jpa/Produto.java</file>
             <file>file:/C:/Caio/Loja%20Discada/Discada/src/java/br/com/discada/model/jpa/GraficoProdutos.java</file>
         </group>
     </open-files>

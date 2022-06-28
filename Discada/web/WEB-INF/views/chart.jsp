@@ -23,18 +23,20 @@
             
                     url: "ChartServ",
                     dataType: "JSON",
-                    type: "get",
-                    success: function(data) {
+                    //type: "get",
+                    success: function(response) {
+                        
+                        alert(response);
                         var data_arr = [
                             ['nome', 'valor'],                            
                         ];
                         
-                        $.each(data, function(i, value){
-                            data_arr.push([value.nome, (value.valor)]);
+                        $.each(response, function(i, value){
+                            data_arr.push([value.nome, value.valor]);
                         })
                         
                         var options = {
-                            title: 'My Daily Activities'
+                            title: 'Gráfico de Vendas - 6 MESES DE ANÁLISE'
                           };
 
                         var figure = google.visualization.arrayToDataTable(data_arr);
@@ -47,35 +49,13 @@
         </script>
     </head>
     <body>
-        
-            <div class="col-12 col-md-12">                        
-            <div class="card" style="width: 100%; text-align: center;" id="blockProductDois">
-                <div class="card-body">
-                    <label id="sloganUm">TODOS OS PRODUTOS POR INTERVALO DE DATA E VALOR - MSG : ${datateste}</label>
-                    <form class="form-inline" id="formuser"  action="${pageContext.request.contextPath}/ChartServ" method="post">
-                        <div class="row">
-                            <div class="col-6">
-                                <label class="sr-only" for="dataInicial" id="sloganUm">Data Inicial</label>
-                                <input id="dataInicial" type="text" name="dataInicial" class="form-control" placeholder="dia/mês/ano">
-                            </div>
-                            <div class="col-6">
-                                <label class="sr-only" for="dataInicial" id="sloganUm">Data Final</label>
-                                <input id="dataFinal" type="text" name="dataFinal" class="form-control" placeholder="dia/mês/ano">
-                            </div>
-
-                            <div style="margin-top: .5em;">                                
-                                <button onclick="" id="btSalvar" type="submit" value="Salvar">Gerar Grafico</button>
-                                
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
         <table class="columns">
-            <tr>
+            <tr>                
                 <div id="piechart" style="width: 900px; height: 500px;"></div>
-            </tr>
+            </tr>            
         </table>
+        <div class="col-4" style="margin-left: 6em;">
+            <a href="${pageContext.request.contextPath}/AnaliseChart"><button type="button" class="btn btn1 btn-primary btn-lg">GERAR GRÁFICO</button></a>
+        </div>    
     </body>
 </html>
